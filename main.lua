@@ -14,9 +14,6 @@ function changeState(newState)
 end
 
 function love.load()
-    love.window.setTitle("Marcero Adventures")
-    love.window.setMode(800, 600)
-
     -- Inicializa o jogo no menu
     changeState(Menu)
 end
