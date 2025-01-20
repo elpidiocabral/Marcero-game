@@ -25,30 +25,61 @@ local game_keys = {
 
 }
 
+--[[
+Funções adaptadas para funcionar com ou sem parâmetro
+]]--
+
 -- Movement
-function game_keys.up_press(key) 
-    return key == game_keys.up or key == game_keys.alt_up
+function game_keys.up_press(key)
+    if key then
+        return key == game_keys.up or key == game_keys.alt_up
+    else
+        return love.keyboard.isDown(game_keys.up) or love.keyboard.isDown(game_keys.alt_up)
+    end
 end
 
 function game_keys.down_press(key)
-    return key == game_keys.down or key == game_keys.alt_down
+    if key then
+        return key == game_keys.down or key == game_keys.alt_down
+    else
+        return love.keyboard.isDown(game_keys.down) or love.keyboard.isDown(game_keys.alt_down)
+    end
 end
 
 function game_keys.left_press(key)
-    return key == game_keys.left or key == game_keys.alt_left
+    if key then
+        return key == game_keys.left or key == game_keys.alt_left
+    else
+        return love.keyboard.isDown(game_keys.left) or love.keyboard.isDown(game_keys.alt_left)
+    end
 end
 
 function game_keys.right_press(key)
-    return key == game_keys.right or key == game_keys.alt_right
+    if key then
+        return key == game_keys.right or key == game_keys.alt_right
+    else
+        return love.keyboard.isDown(game_keys.right) or love.keyboard.isDown(game_keys.alt_right)
+    end
 end
 
 -- Actions
 function game_keys.jump_press(key)
-    return key == game_keys.jump
+    if key then
+        return key == game_keys.jump
+    else
+        return love.keyboard.isDown(game_keys.jump)
+    end
 end
 
 function game_keys.confirm_press(key)
-    return key == game_keys.confirm or key == game_keys.alt_confirm
+    if key then
+        return key == game_keys.confirm
+    else
+        return love.keyboard.isDown(game_keys.confirm)
+    end
 end
+
+-- Releases
+
 
 return game_keys
