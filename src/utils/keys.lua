@@ -1,4 +1,4 @@
-Keys = {
+local game_keys = {
     -- Movement
     up = "w",
     down = "s",
@@ -26,27 +26,29 @@ Keys = {
 }
 
 -- Movement
-function Keys.up_press(key) 
-    return key == Keys.up or key == Keys.alt_up
+function game_keys.up_press(key) 
+    return key == game_keys.up or key == game_keys.alt_up
 end
 
-function Keys.down_press(key)
-    return key == Keys.down or key == Keys.alt_down
+function game_keys.down_press(key)
+    return key == game_keys.down or key == game_keys.alt_down
 end
 
-function Keys.left_press(key)
-    return key == Keys.left or key == Keys.alt_left
+function game_keys.left_press(key)
+    return key == game_keys.left or key == game_keys.alt_left
 end
 
-function Keys.right_press(key)
-    return key == Keys.right or key == Keys.alt_right
+function game_keys.right_press(key)
+    return key == game_keys.right or key == game_keys.alt_right
 end
 
 -- Actions
-function Keys.jump_press(key)
-    return key == Keys.jump
+function game_keys.jump_press(key)
+    return key == game_keys.jump
 end
 
-function Keys.confirm_press(key)
-    return key == Keys.confirm or key == Keys.alt_confirm
+function game_keys.confirm_press(key)
+    return key == game_keys.confirm or key == game_keys.alt_confirm
 end
+
+return game_keys
