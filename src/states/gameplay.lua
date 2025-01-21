@@ -6,6 +6,7 @@ local ground, line1, line2, teto
 
 local Player = require("src.entities.player")
 local player
+local collider
 
 local tileImage
 local tilesWide, tilesHigh
@@ -19,7 +20,10 @@ function Gameplay.load()
     world:addCollisionClass("Ground")
 
     -- Player
-    player = Player:new(world, 0, love.graphics.getHeight() - 64)
+    player = Player:new(0, love.graphics.getHeight() - 64)
+    collider = world:newRectangleCollider(0, love.graphics.getHeight() - 64, 32, 32, { collision_class = "Player" })
+    player.collider = collider
+    player.collider:setFixedRotation(true)
     
     -- Calcular quantos tiles cabem na tela
     tileImage = love.graphics.newImage("assets/tile.png")

@@ -3,7 +3,7 @@ Player.__index = Player
 
 local game_keys = require("src.utils.keys")
 
-function Player:new(world, x, y)
+function Player:new(x, y)
     local player = {}
     setmetatable(player, Player)
 
@@ -11,10 +11,9 @@ function Player:new(world, x, y)
     player.width = 32
     player.height = 32
 
-    -- Criar colisor no mundo
-    player.collider = world:newRectangleCollider(x, y, player.width, player.height, { collision_class = "Player" })
-    player.collider:setFixedRotation(true)
-
+    -- Criar colisor injetado
+    player.collider = nil
+    
     -- Parâmetros de movimento
     player.speed = 200
     player.jump_force = -600
