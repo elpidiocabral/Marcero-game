@@ -1,7 +1,8 @@
-local game_keys = require("src.utils.keys")
 local Menu = {}
 local selectOption = 1
 local options = { "Iniciar", "Configurações", "Sair" }
+
+local game_keys = require("src.utils.keys")
 
 function Menu.load()
     

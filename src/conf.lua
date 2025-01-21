@@ -6,7 +6,7 @@ function love.conf(t)
     t.window.fullscreen = false
     t.window.vsync = 1
     -- t.window.icon = "assets/images/icon.png"
-
+    
     t.modules.audio = true
     t.modules.event = true
     t.modules.graphics = true
@@ -14,5 +14,8 @@ function love.conf(t)
     t.modules.timer = true
     t.modules.mouse = true
     t.modules.keyboard = true
-    t.modules.physics = false
+    t.modules.physics = true
+
+    -- Por algum motivo o console faz o jogo crashar em 1min
+	-- t.console = true
 end

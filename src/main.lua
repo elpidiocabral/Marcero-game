@@ -9,7 +9,7 @@ local currentState = nil
 function changeState(newState)
     currentState = newState
     if currentState and currentState.load then
-        currentState.load()
+        currentState:load()
     end
 end
 
@@ -20,13 +20,13 @@ end
 
 function love.update(dt)
     if currentState and currentState.update then
-        currentState.update(dt)
+        currentState:update(dt)
     end
 end
 
 function love.draw()
     if currentState and currentState.draw then
-        currentState.draw()
+        currentState:draw()
     end
 end
 
