@@ -9,9 +9,6 @@ Colision.__index = Colision
 local wf = require("libs.windfield")
 local world
 
-local Player = require("src.entities.player")
-local Enemy = require("src.entities.enemy")
-
 function Colision:new(gravity)
     local colision = {}
     setmetatable(colision, Colision)
@@ -21,6 +18,7 @@ function Colision:new(gravity)
     world:addCollisionClass("Enemy")
     world:addCollisionClass("Ground")
     world:addCollisionClass("Wall")
+    world:addCollisionClass("PowerUp")
 
     return colision
 end
@@ -45,7 +43,6 @@ end
 function Colision:addEnemy(x_position, y_position, width, height)
     local colider = world:newRectangleCollider(x_position, y_position, width, height, { collision_class = "Enemy" })
     colider:setFixedRotation(true)
-    colider:setType("static")
 
     return colider
 end
@@ -56,6 +53,10 @@ end
 
 function Colision:addWall(x_position, y_position, width, height)
     return world:newRectangleCollider(x_position, y_position, width, height, { collision_class = "Wall", body_type = "static" })
+end
+
+function Colision:addPowerUp(x_position, y_position, radius)
+    return world:newCircleCollider(x_position, y_position, radius, { collision_class = "PowerUp" })
 end
 -- Fim
 

@@ -5,23 +5,32 @@ function Enemy:new(x, y)
     local enemy = {}
     setmetatable(enemy, Enemy)
 
-    -- Enemy attibutes
-    Enemy.width = 32
-    Enemy.height = 32
+    -- Enemy attributes
+    enemy.width = 32
+    enemy.height = 32
 
-    Enemy.collider = nil
+    enemy.collider = nil
 
-    Enemy.speed = 200
+    enemy.speed = 100
+    enemy.direction = -1  -- 1 for right, -1 for left
+    enemy.max_distance = 100  -- Distance to walk before changing direction
+    enemy.start_x = x or 200
 
     return enemy
 end
 
 function Enemy:update(dt)
-    -- Movimento 
+    -- Movement
     local x_velocity, y_velocity = self.collider:getLinearVelocity()
-    if x_velocity < ( love.graphics.getWidth() - 128) then
-        self.collider:setLinearVelocity(self.speed, y_velocity)
+    local x, y = self.collider:getPosition()
+
+    if self.direction == 1 and x >= self.start_x + self.max_distance then
+        self.direction = -1
+    elseif self.direction == -1 and x <= self.start_x - self.max_distance then
+        self.direction = 1
     end
+
+    self.collider:setLinearVelocity(self.speed * self.direction, y_velocity)
 end
 
 function Enemy:draw()

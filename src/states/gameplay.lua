@@ -17,12 +17,12 @@ function Gameplay.load()
     world = wf:new(800)
 
     -- Player
-    player = Player:new(0, love.graphics.getHeight() - 64)
+    player = Player:new()
     player.collider = world:addPlayer(0, love.graphics.getHeight() - 64, 32, 32)
 
     -- Enemy
-    enemy = Enemy:new(300, love.graphics.getHeight() - 64)
-    enemy.collider = world:addEnemy(300, love.graphics.getHeight() - 64, 32, 32)
+    enemy = Enemy:new(600, love.graphics.getHeight() - 64)
+    enemy.collider = world:addEnemy(600, love.graphics.getHeight() - 64, 32, 32)
     
     -- Calcular quantos tiles cabem na tela
     tileImage = love.graphics.newImage("assets/tile.png")
@@ -47,6 +47,7 @@ end
 
 function Gameplay:update(dt)
     player:update(dt)
+    enemy:update(dt)
     world:update(dt)
 end
 
