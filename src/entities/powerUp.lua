@@ -18,7 +18,9 @@ function PowerUp:update(dt)
 end
 
 function PowerUp:draw()
-    
+    love.graphics.setColor(1, 0, 1)
+    local x, y = self.collider:getPosition()
+    love.graphics.circle("fill", x - self.width / 2, y - self.height / 2, self.width)
 end
 
 return PowerUp

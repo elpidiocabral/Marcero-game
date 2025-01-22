@@ -8,6 +8,8 @@ local Player = require("src.entities.player")
 local player
 local Enemy = require("src.entities.enemy")
 local enemy
+local PowerUp = require("src.entities.powerUp")
+local powerUp
 
 local tileImage
 local tilesWide, tilesHigh
@@ -24,6 +26,10 @@ function Gameplay.load()
     enemy = Enemy:new(600, love.graphics.getHeight() - 64)
     enemy.collider = world:addEnemy(600, love.graphics.getHeight() - 64, 32, 32)
     
+    -- PowerUp
+    powerUp = PowerUp:new()
+    powerUp.collider = world:addPowerUp(150, love.graphics.getHeight() - 64, 8)
+
     -- Calcular quantos tiles cabem na tela
     tileImage = love.graphics.newImage("assets/tile.png")
     local tileWidth = tileImage:getWidth()
