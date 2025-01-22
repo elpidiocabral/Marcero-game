@@ -11,11 +11,17 @@ function Enemy:new(x, y)
 
     Enemy.collider = nil
 
+    Enemy.speed = 200
+
     return enemy
 end
 
 function Enemy:update(dt)
-    -- Update enemy state
+    -- Movimento 
+    local x_velocity, y_velocity = self.collider:getLinearVelocity()
+    if x_velocity < ( love.graphics.getWidth() - 128) then
+        self.collider:setLinearVelocity(self.speed, y_velocity)
+    end
 end
 
 function Enemy:draw()

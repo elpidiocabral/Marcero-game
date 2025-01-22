@@ -20,6 +20,7 @@ function Gameplay.load()
     -- Adicionar classes de colisão
     world:addCollisionClass("Player")
     world:addCollisionClass("Ground")
+    world:addCollisionClass("Enemy")
 
     -- Player
     player = Player:new(0, love.graphics.getHeight() - 64)
@@ -28,10 +29,11 @@ function Gameplay.load()
     player.collider:setFixedRotation(true)
 
     -- Enemy
-    enemy = Enemy:new(300, 64)
-    collider = world:newRectangleCollider(300, 64, 32, 32, { collision_class = "Enemy" })
+    enemy = Enemy:new(300, love.graphics.getHeight() - 64)
+    collider = world:newRectangleCollider(300, love.graphics.getHeight() - 64, 33, 33, { collision_class = "Enemy" })
     enemy.collider = collider
     enemy.collider:setFixedRotation(true)
+    enemy.collider:setType("static")
     
     -- Calcular quantos tiles cabem na tela
     tileImage = love.graphics.newImage("assets/tile.png")

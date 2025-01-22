@@ -30,6 +30,11 @@ function Player:update(dt)
         self.is_on_ground = false
     end
 
+    -- Encontrão com um inimigo
+    if self.collider:enter("Enemy") then
+        self.collider:applyLinearImpulse(0, -500)
+    end
+
     -- Movimento horizontal
     local x_velocity, y_velocity = self.collider:getLinearVelocity()
 
