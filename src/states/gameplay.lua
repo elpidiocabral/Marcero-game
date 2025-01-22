@@ -1,6 +1,6 @@
 local Gameplay = {}
 
-local wf = require("libs.windfield")
+local wf = require("entities.colision")
 local world
 local ground, line1, line2, teto
 
@@ -13,27 +13,16 @@ local tileImage
 local tilesWide, tilesHigh
 
 function Gameplay.load()
-    local collider = nil
     -- Windfield
-    world = wf.newWorld(0, 800, true)
-
-    -- Adicionar classes de colisão
-    world:addCollisionClass("Player")
-    world:addCollisionClass("Ground")
-    world:addCollisionClass("Enemy")
+    world = wf:new(800)
 
     -- Player
     player = Player:new(0, love.graphics.getHeight() - 64)
-    collider = world:newRectangleCollider(0, love.graphics.getHeight() - 64, 32, 32, { collision_class = "Player" })
-    player.collider = collider
-    player.collider:setFixedRotation(true)
+    player.collider = world:addPlayer(0, love.graphics.getHeight() - 64, 32, 32)
 
     -- Enemy
     enemy = Enemy:new(300, love.graphics.getHeight() - 64)
-    collider = world:newRectangleCollider(300, love.graphics.getHeight() - 64, 33, 33, { collision_class = "Enemy" })
-    enemy.collider = collider
-    enemy.collider:setFixedRotation(true)
-    enemy.collider:setType("static")
+    enemy.collider = world:addEnemy(300, love.graphics.getHeight() - 64, 32, 32)
     
     -- Calcular quantos tiles cabem na tela
     tileImage = love.graphics.newImage("assets/tile.png")
@@ -50,10 +39,10 @@ function Gameplay.load()
         h = tileHeight
     end
 
-    ground = world:newRectangleCollider(0, love.graphics.getHeight() - tileHeight, w, tileHeight, { collision_class = "Ground", body_type = "static" })
-    line1 = world:newRectangleCollider(0, 0, 1, 600, { collision_class = "Wall", body_type = "static" })
-    line2 = world:newRectangleCollider(800, 0, 1, 600, { collision_class = "Wall", body_type = "static" })
-    teto = world:newRectangleCollider(0, 0, 800, 1, { collision_class = "Wall", body_type = "static" })
+    ground = world:addGround(0, love.graphics.getHeight() - tileHeight, w, tileHeight)
+    line1 = world:addWall(0, 0, 1, 600)
+    line2 = world:addWall(800, 0, 1, 600)
+    teto = world:addWall(0, 0, 800, 1)
 end
 
 function Gameplay:update(dt)
