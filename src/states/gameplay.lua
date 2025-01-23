@@ -74,8 +74,12 @@ function Gameplay.draw()
     world:draw()
 end
 
-function Gameplay.keypressed()
-    
+function Gameplay.keypressed(key)
+    Player.keypressed(key)
+end
+
+function Gameplay.keyreleased(key)
+    Player.keyreleased(key)
 end
 
 return Gameplay
