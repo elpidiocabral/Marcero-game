@@ -16,7 +16,7 @@ function Player:new(x, y)
     
     -- Parâmetros de movimento
     player.speed = 200
-    player.jump_force = -600
+    player.jump_force = -800
     player.is_on_ground = false
 
     return player
@@ -51,6 +51,8 @@ function Player:update(dt)
         self.collider:applyLinearImpulse(0, self.jump_force)
         self.is_on_ground = false -- Evitar múltiplos pulos
     end
+
+    -- Pular Plataform
 end
 
 function Player:draw()

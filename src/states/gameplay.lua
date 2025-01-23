@@ -2,7 +2,7 @@ local Gameplay = {}
 
 local wf = require("src.entities.colision")
 local world
-local ground, line1, line2, teto
+local ground, line1, line2, teto, platform
 
 local Player = require("src.entities.player")
 local player
@@ -27,8 +27,8 @@ function Gameplay.load()
     enemy.collider = world:addEnemy(600, love.graphics.getHeight() - 64, 32, 32)
     
     -- PowerUp
-    powerUp = PowerUp:new()
-    powerUp.collider = world:addPowerUp(150, love.graphics.getHeight() - 64, 8)
+    -- powerUp = PowerUp:new()
+    -- powerUp.collider = world:addPowerUp(150, love.graphics.getHeight() - 64, 8)
 
     -- Calcular quantos tiles cabem na tela
     tileImage = love.graphics.newImage("src/assets/tile.png")
@@ -49,6 +49,7 @@ function Gameplay.load()
     line1 = world:addWall(0, 0, 1, 600)
     line2 = world:addWall(800, 0, 1, 600)
     teto = world:addWall(0, 0, 800, 1)
+    platform = world:addPlatform(150, love.graphics.getHeight() - 120, 120, 16)
 end
 
 function Gameplay:update(dt)
