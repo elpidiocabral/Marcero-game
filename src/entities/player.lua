@@ -24,9 +24,9 @@ end
 
 function Player:update(dt)
     -- Atualizar o estado: verificar contato com o chão
-    if self.collider:enter("Ground") then
+    if self.collider:enter("Ground") or self.collider:enter("Platform") then
         self.is_on_ground = true
-    elseif self.collider:exit("Ground") then
+    elseif self.collider:exit("Ground") or self.collider:enter("Plataform") then
         self.is_on_ground = false
     end
 
@@ -53,6 +53,22 @@ function Player:update(dt)
     end
 
     -- Pular Plataform
+    self.collider:setPreSolve(
+        function(colider1, colider2, contact)
+            if colider2.collision_class == "Platform" then
+                local player_x, player_y = colider1:getPosition()
+                local player_width, player_height = self.width, self.height
+                local platform = colider2:getObject()
+                local platform_x, platform_y = colider2:getPosition()
+                local platform_width, platform_height = platform.width, platform.height
+
+                if (player_y + player_height / 2) > (platform_y + platform_height / 2) then
+                    contact:setEnabled(false)
+                    self.is_on_ground = false
+                end
+            end
+        end
+    )
 end
 
 function Player:draw()
