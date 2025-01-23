@@ -1,8 +1,9 @@
 # Marcero Game 
-Marcero Game é um projeto em Lua, usando framework LOVE2D.
 
 <img src="{https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua&logoColor=white}" />
 <img src="{https://img.shields.io/badge/L%C3%96VE-0.10.1-EA316E.svg}" />
+
+Marcero Game é um projeto em Lua, usando framework LOVE2D.
 
 O jogo se basea em ser um plataformer 2D inspirado em Mario World com multiplayer local.
 A implementação das mecânicas mais marcantes de um jogo plataforma com o poder da linguagem lua.
