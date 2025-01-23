@@ -17,5 +17,5 @@ function love.conf(t)
     t.modules.physics = true
 
     -- Por algum motivo o console faz o jogo crashar em 1min
-	-- t.console = true
+	--t.console = true
 end

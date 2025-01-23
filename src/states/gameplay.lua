@@ -1,30 +1,35 @@
 local Gameplay = {}
 
-local wf = require("libs.windfield")
+local wf = require("entities.colision")
 local world
 local ground, line1, line2, teto
 
 local Player = require("src.entities.player")
 local player
-local collider
+local Enemy = require("src.entities.enemy")
+local enemy
+local PowerUp = require("src.entities.powerUp")
+local powerUp
 
 local tileImage
 local tilesWide, tilesHigh
 
 function Gameplay.load()
     -- Windfield
-    world = wf.newWorld(0, 800, true)
-
-    -- Adicionar classes de colisão
-    world:addCollisionClass("Player")
-    world:addCollisionClass("Ground")
+    world = wf:new(800)
 
     -- Player
-    player = Player:new(0, love.graphics.getHeight() - 64)
-    collider = world:newRectangleCollider(0, love.graphics.getHeight() - 64, 32, 32, { collision_class = "Player" })
-    player.collider = collider
-    player.collider:setFixedRotation(true)
+    player = Player:new()
+    player.collider = world:addPlayer(0, love.graphics.getHeight() - 64, 32, 32)
+
+    -- Enemy
+    enemy = Enemy:new(600, love.graphics.getHeight() - 64)
+    enemy.collider = world:addEnemy(600, love.graphics.getHeight() - 64, 32, 32)
     
+    -- PowerUp
+    powerUp = PowerUp:new()
+    powerUp.collider = world:addPowerUp(150, love.graphics.getHeight() - 64, 8)
+
     -- Calcular quantos tiles cabem na tela
     tileImage = love.graphics.newImage("assets/tile.png")
     local tileWidth = tileImage:getWidth()
@@ -39,14 +44,16 @@ function Gameplay.load()
         w = w + tileWidth
         h = tileHeight
     end
-    ground = world:newRectangleCollider(0, love.graphics.getHeight() - tileHeight, w, tileHeight, { collision_class = "Ground", body_type = "static" })
-    line1 = world:newRectangleCollider(0, 0, 1, 600, { collision_class = "Ground", body_type = "static" })
-    line2 = world:newRectangleCollider(800, 0, 1, 600, { collision_class = "Ground", body_type = "static" })
-    teto = world:newRectangleCollider(0, 0, 800, 1, { collision_class = "Ground", body_type = "static" })
+
+    ground = world:addGround(0, love.graphics.getHeight() - tileHeight, w, tileHeight)
+    line1 = world:addWall(0, 0, 1, 600)
+    line2 = world:addWall(800, 0, 1, 600)
+    teto = world:addWall(0, 0, 800, 1)
 end
 
 function Gameplay:update(dt)
     player:update(dt)
+    enemy:update(dt)
     world:update(dt)
 end
 
@@ -60,7 +67,8 @@ function Gameplay.draw()
         end
     end
 
-    -- Player
+    -- Draw Entities
+    enemy:draw()
     player:draw()
     world:draw()
 end
