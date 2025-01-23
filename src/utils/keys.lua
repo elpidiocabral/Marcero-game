@@ -22,7 +22,6 @@ local game_keys = {
 
     -- Debug
     debug = "f1",
-
 }
 
 --[[
