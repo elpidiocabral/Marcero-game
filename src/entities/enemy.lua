@@ -6,6 +6,8 @@ function Enemy:new(x, y)
     setmetatable(enemy, Enemy)
 
     -- Enemy attributes
+    enemy.x = x or 200
+    enemy.y = y or 200
     enemy.width = 32
     enemy.height = 32
 

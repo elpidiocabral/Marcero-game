@@ -19,12 +19,16 @@ function Player:new(x, y)
     player.jump_force = -800
     player.is_on_ground = false
 
+    -- PowerUps
+    player.is_ghost = false
+    player.ghost_timer = 0
+
     return player
 end
 
 -- Local Functions
--- Função local para pular plataformas
-local function handlePlatformCollision(collider1, collider2, contact, player)
+local function handleColision(collider1, collider2, contact, player)
+    -- Platform Colision
     if collider2.collision_class == "Platform" then
         local player_x, player_y = collider1:getPosition()
         local player_width, player_height = player.width, player.height
@@ -39,10 +43,10 @@ local function handlePlatformCollision(collider1, collider2, contact, player)
             local player_right = player_x + player_width / 2
             local platform_left = platform_x - platform_width / 2
             local platform_right = platform_x + platform_width / 2
+            player.is_on_ground = false
 
             if player_left >= platform_left and player_right <= platform_right then
                 contact:setEnabled(false)
-                player.is_on_ground = false
             end
         end
     end
@@ -51,9 +55,9 @@ end
 
 function Player:update(dt)
     -- Atualizar o estado: verificar contato com o chão
-    if self.collider:enter("Ground") or self.collider:enter("Platform") then
+    if self.collider:enter("Ground") or self.collider:enter("Platform") or self.collider:enter("Block")  then
         self.is_on_ground = true
-    elseif self.collider:exit("Ground") or self.collider:enter("Plataform") then
+    elseif self.collider:exit("Ground") or self.collider:enter("Plataform") or self.collider:enter("Block") then
         self.is_on_ground = false
     end
 
@@ -75,13 +79,10 @@ function Player:update(dt)
 
     -- Pular Plataforma, talvez grande demais
     self.collider:setPreSolve(function(collider1, collider2, contact)
-        handlePlatformCollision(collider1, collider2, contact, self)
+        handleColision(collider1, collider2, contact, self)
     end)
 
     -- Encontrão com um inimigo
-    if self.collider:enter("Enemy") then
-        --self.collider:applyLinearImpulse(0, -500)
-    end
 end
 
 function Player:draw()
