@@ -1,7 +1,7 @@
 local Player = {}
 Player.__index = Player
 
-local game_keys = require("src.utils.keys")
+local input = require("src.utils.input")
 
 function Player:new(x, y)
     local player = {}
@@ -16,7 +16,7 @@ function Player:new(x, y)
     
     -- Parâmetros de movimento
     player.speed = 200
-    player.jump_force = -600
+    player.jump_force = -800
     player.is_on_ground = false
 
     return player
@@ -24,9 +24,9 @@ end
 
 function Player:update(dt)
     -- Atualizar o estado: verificar contato com o chão
-    if self.collider:enter("Ground") then
+    if self.collider:enter("Ground") or self.collider:enter("Platform") then
         self.is_on_ground = true
-    elseif self.collider:exit("Ground") then
+    elseif self.collider:exit("Ground") or self.collider:enter("Plataform") then
         self.is_on_ground = false
     end
 
@@ -38,19 +38,50 @@ function Player:update(dt)
     -- Movimento horizontal
     local x_velocity, y_velocity = self.collider:getLinearVelocity()
 
-    if game_keys.right_press() then
+    if input.right_pressed() then
         self.collider:setLinearVelocity(self.speed, y_velocity)
-    elseif game_keys.left_press() then
+    elseif input.left_pressed() then
         self.collider:setLinearVelocity(-self.speed, y_velocity)
     else
         self.collider:setLinearVelocity(0, y_velocity)
     end
 
     -- Pulo
-    if game_keys.jump_press() and self.is_on_ground then
+    if input.jump_press() and self.is_on_ground then
         self.collider:applyLinearImpulse(0, self.jump_force)
         self.is_on_ground = false -- Evitar múltiplos pulos
     end
+
+    -- Pular Plataforma, talvez grande demais
+    self.collider:setPreSolve(
+        function(collider1, collider2, contact)
+            if collider2.collision_class == "Platform" then
+                local player_x, player_y = collider1:getPosition()
+                local player_width, player_height = self.width, self.height
+                local platform = collider2:getObject()
+                local platform_x, platform_y = collider2:getPosition()
+                local platform_width, platform_height = platform.width, platform.height
+    
+                if (player_y + player_height / 2) > (platform_y + platform_height / 2) then
+                    local player_left = player_x - player_width / 2
+                    local player_right = player_x + player_width / 2
+                    local platform_left = platform_x - platform_width / 2
+                    local platform_right = platform_x + platform_width / 2
+    
+                    local overlap_left = player_left < platform_right
+                    local overlap_right = player_right > platform_left
+    
+                    if overlap_left and overlap_right and 
+                       (player_left + player_width / 2) >= platform_left and 
+                       (player_right - player_width / 2) <= platform_right then
+                        contact:setEnabled(false)
+                        self.is_on_ground = false
+                    end
+                end
+            end
+        end
+    )
+    
 end
 
 function Player:draw()
@@ -58,6 +89,14 @@ function Player:draw()
     love.graphics.setColor(1, 1, 1)
     local x, y = self.collider:getPosition()
     love.graphics.rectangle("fill", x - self.width / 2, y - self.height / 2, self.width, self.height)
+end
+
+function Player.keypressed(key)
+    input.keypressed(key)
+end
+
+function Player.keyreleased(key)
+   input.keyreleased(key)
 end
 
 return Player

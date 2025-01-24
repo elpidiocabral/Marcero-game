@@ -2,7 +2,7 @@ local Menu = {}
 local selectOption = 1
 local options = { "Iniciar", "Configurações", "Sair" }
 
-local game_keys = require("src.utils.keys")
+local input = require("src.utils.input")
 
 function Menu.load()
     
@@ -33,19 +33,19 @@ function Menu.draw()
 end
 
 function Menu.keypressed(key)
-    print("Tecra pressionada: " .. key) 
+    input.keypressed(key)
 
-    if game_keys.up_press(key) then
+    if input.up_pressed() then
         selectOption = selectOption - 1
         if selectOption < 1 then
             selectOption = #options
         end
-    elseif game_keys.down_press(key) then
+    elseif input.down_pressed() then
         selectOption = selectOption + 1
         if selectOption > #options then
             selectOption = 1
         end 
-    elseif game_keys.confirm_press(key) or game_keys.jump_press(key) then
+    elseif input.confirm_press() or input.jump_press() then
         if options[selectOption] == "Iniciar" then
             changeState(require("src.states.gameplay"))
         elseif options[selectOption] == "Configurações" then
@@ -53,7 +53,11 @@ function Menu.keypressed(key)
         elseif options[selectOption] == "Sair" then
             love.event.quit()
         end
-    end 
+    end
+end
+
+function Menu.keyreleased(key)
+    input.keyreleased(key)
 end
 
 return Menu
