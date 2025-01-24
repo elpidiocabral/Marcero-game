@@ -34,7 +34,7 @@ function Colision:addPlayer(x_position, y_position, width, height)
     colider:setObject({ width = width, height = height })
     colider:setFixedRotation(true)
     colider:setRestitution(0)
-    colider:setFriction(1)
+    colider:setFriction(0) -- Impede "grudes" nas paredes
 
     return colider
 end
@@ -48,6 +48,7 @@ function Colision:addEnemy(x_position, y_position, width, height)
     local colider = world:newRectangleCollider(x_position, y_position, width, height, { collision_class = "Enemy" })
     colider:setFixedRotation(true)
     colider:setRestitution(0)
+    colider:setFriction(0) -- Impede "grudes"
 
     return colider
 end

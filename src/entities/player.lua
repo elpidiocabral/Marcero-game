@@ -22,6 +22,33 @@ function Player:new(x, y)
     return player
 end
 
+-- Local Functions
+-- Função local para pular plataformas
+local function handlePlatformCollision(collider1, collider2, contact, player)
+    if collider2.collision_class == "Platform" then
+        local player_x, player_y = collider1:getPosition()
+        local player_width, player_height = player.width, player.height
+        local platform_x, platform_y = collider2:getPosition()
+        local platform = collider2:getObject()
+        local platform_width, platform_height = platform.width, platform.height
+
+        -- Verificar se o jogador está abaixo da plataforma (verticalmente)
+        if (player_y + player_height / 2) > (platform_y + platform_height / 2) then
+            -- Verificar se o jogador está suficientemente dentro da plataforma (horizontalmente)
+            local player_left = player_x - player_width / 2
+            local player_right = player_x + player_width / 2
+            local platform_left = platform_x - platform_width / 2
+            local platform_right = platform_x + platform_width / 2
+
+            if player_left >= platform_left and player_right <= platform_right then
+                contact:setEnabled(false)
+                player.is_on_ground = false
+            end
+        end
+    end
+end
+-- End
+
 function Player:update(dt)
     -- Atualizar o estado: verificar contato com o chão
     if self.collider:enter("Ground") or self.collider:enter("Platform") then
@@ -30,14 +57,8 @@ function Player:update(dt)
         self.is_on_ground = false
     end
 
-    -- Encontrão com um inimigo
-    if self.collider:enter("Enemy") then
-        self.collider:applyLinearImpulse(0, -500)
-    end
-
     -- Movimento horizontal
     local x_velocity, y_velocity = self.collider:getLinearVelocity()
-
     if input.right_pressed() then
         self.collider:setLinearVelocity(self.speed, y_velocity)
     elseif input.left_pressed() then
@@ -53,35 +74,14 @@ function Player:update(dt)
     end
 
     -- Pular Plataforma, talvez grande demais
-    self.collider:setPreSolve(
-        function(collider1, collider2, contact)
-            if collider2.collision_class == "Platform" then
-                local player_x, player_y = collider1:getPosition()
-                local player_width, player_height = self.width, self.height
-                local platform = collider2:getObject()
-                local platform_x, platform_y = collider2:getPosition()
-                local platform_width, platform_height = platform.width, platform.height
-    
-                if (player_y + player_height / 2) > (platform_y + platform_height / 2) then
-                    local player_left = player_x - player_width / 2
-                    local player_right = player_x + player_width / 2
-                    local platform_left = platform_x - platform_width / 2
-                    local platform_right = platform_x + platform_width / 2
-    
-                    local overlap_left = player_left < platform_right
-                    local overlap_right = player_right > platform_left
-    
-                    if overlap_left and overlap_right and 
-                       (player_left + player_width / 2) >= platform_left and 
-                       (player_right - player_width / 2) <= platform_right then
-                        contact:setEnabled(false)
-                        self.is_on_ground = false
-                    end
-                end
-            end
-        end
-    )
-    
+    self.collider:setPreSolve(function(collider1, collider2, contact)
+        handlePlatformCollision(collider1, collider2, contact, self)
+    end)
+
+    -- Encontrão com um inimigo
+    if self.collider:enter("Enemy") then
+        --self.collider:applyLinearImpulse(0, -500)
+    end
 end
 
 function Player:draw()

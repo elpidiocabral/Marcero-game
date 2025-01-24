@@ -2,7 +2,7 @@ local Gameplay = {}
 
 local wf = require("src.entities.colision")
 local world
-local ground, line1, line2, teto, platform
+local ground, line, teto, platform, platform
 
 local Player = require("src.entities.player")
 local player
@@ -46,10 +46,11 @@ function Gameplay.load()
     end
 
     ground = world:addGround(0, love.graphics.getHeight() - tileHeight, w, tileHeight)
-    line1 = world:addWall(0, 0, 1, 600)
-    line2 = world:addWall(800, 0, 1, 600)
+    line = world:addWall(0, 0, 1, 600)
+    line = world:addWall(800, 0, 1, 600)
     teto = world:addWall(0, 0, 800, 1)
-    platform = world:addPlatform(150, love.graphics.getHeight() - 120, 120, 16)
+    platform = world:addPlatform(150, love.graphics.getHeight() - 120, 120, 16) -- 120 - 64base = 56
+    platform = world:addPlatform(200, love.graphics.getHeight() - 210, 120, 16)
 end
 
 function Gameplay:update(dt)
