@@ -21,6 +21,22 @@ function Enemy:new(x, y)
     return enemy
 end
 
+function Enemy:contact_behavior()
+    return function(contact_data)
+        if contact_data.collider2.collision_class == "Player" then
+        
+            if (contact_data.collider2_right > contact_data.collider1_left or contact_data.collider1_left < contact_data.collider1_right) 
+                and (contact_data.collider2_bottom > contact_data.collider1_top) then
+                contact_data.collider2:applyLinearImpulse(-300, -150)
+            elseif (contact_data.collider2_bottom <= contact_data.collider1_top) then
+                contact_data.collider2:applyLinearImpulse(0, -200)
+                contact_data.collider1:destroy()
+                contact_data.entitie.collider = nil
+            end
+        end
+    end
+end
+
 function Enemy:update(dt)
     if not self.collider then return end -- Impede atualizações post mortem
 
@@ -35,37 +51,13 @@ function Enemy:update(dt)
     end
 
     self.collider:setLinearVelocity(self.speed * self.direction, y_velocity)
+end
 
-    -- colisão com player
-    self.collider:setPreSolve(
-        function(collider1, collider2, contact)
-            if collider2.collision_class == "Player" then
-                local enemy_x, enemy_y = collider1:getPosition()
-                local enemy_width, enemy_height = self.width, self.height
-                local player_x, player_y = collider2:getPosition()
-                local player = collider2:getObject()
-                local player_width, player_height = player.width, player.height
-
-                local player_left = player_x - player_width / 2
-                local player_right = player_x + player_width / 2
-                local enemy_left = enemy_x - enemy_width / 2
-                local enemy_right = enemy_x + enemy_width / 2
-
-                local player_top = player_y - player_height / 2
-                local player_bottom = player_y + player_height / 2
-                local enemy_top = enemy_y - enemy_height / 2
-                local enemy_bottom = enemy_y + enemy_height / 2
-
-                if (player_right > enemy_left or player_left < enemy_right) and (player_bottom > enemy_top) then
-                    collider2:applyLinearImpulse(-300, -150)
-                elseif (player_bottom <= enemy_top) then
-                    collider2:applyLinearImpulse(0, -200)
-                    collider1:destroy()
-                    self.collider = nil
-                end
-            end
-        end
-    )
+function Enemy:destroy()
+    if self.collider then
+        self.collider:destroy()
+        self.collider = nil
+    end
 end
 
 function Enemy:draw()

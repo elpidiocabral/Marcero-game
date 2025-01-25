@@ -28,30 +28,7 @@ function Player:new(x, y)
 end
 
 -- Functions
-local function handleColision(collider1, collider2, contact, player)
-    -- Platform Colision
-    if collider2.collision_class == "Platform" then
-        local player_x, player_y = collider1:getPosition()
-        local player_width, player_height = player.width, player.height
-        local platform_x, platform_y = collider2:getPosition()
-        local platform = collider2:getObject()
-        local platform_width, platform_height = platform.width, platform.height
 
-        -- Verificar se o jogador está abaixo da plataforma (verticalmente)
-        if (player_y + player_height / 2) > (platform_y + platform_height / 2) then
-            -- Verificar se o jogador está suficientemente dentro da plataforma (horizontalmente)
-            local player_left = player_x - player_width / 2
-            local player_right = player_x + player_width / 2
-            local platform_left = platform_x - platform_width / 2
-            local platform_right = platform_x + platform_width / 2
-            player.is_on_ground = false
-
-            if player_left >= platform_left and player_right <= platform_right then
-                contact:setEnabled(false)
-            end
-        end
-    end
-end
 -- End
 
 function Player:activateGhostMode(duration)
@@ -76,9 +53,26 @@ function Player:update(dt)
     end
 
     -- Verificar se está no chão
-    if self.collider:enter("Ground") or self.collider:enter("Platform") or self.collider:enter("Block")  then
+    if self.collider:enter("Ground") or self.collider:enter("Block") or self.collider:enter("Platform") then
         self.is_on_ground = true
     elseif self.collider:exit("Ground") or self.collider:enter("Plataform") or self.collider:enter("Block") then
+        self.is_on_ground = false
+    end
+
+    -- Verificar se o player está indo para a plataforma
+    if self.collider:enter("Platform") then
+        local collision_data = { self.collider:getEnterCollisionData("Platform") }
+        if collision_data[1] and collision_data[2] then
+            local platform_y = collision_data[2]:getY()
+            local _, player_y = self.collider:getPosition()
+
+            if player_y < platform_y then
+                self.is_on_ground = true
+            else
+                self.is_on_ground = false
+            end
+        end
+    elseif self.collider:exit("Platform") then
         self.is_on_ground = false
     end
 
@@ -97,16 +91,10 @@ function Player:update(dt)
         self.collider:applyLinearImpulse(0, self.jump_force)
         self.is_on_ground = false -- Evitar múltiplos pulos
     end
-
-    -- Pular Plataforma, talvez grande demais
-    self.collider:setPreSolve(function(collider1, collider2, contact)
-        handleColision(collider1, collider2, contact, self)
-    end)
-
+    
     -- Colisão com PowerUp
     if self.collider:enter("PowerUp") then
         self:activateGhostMode(15)
-        local powerUp = self.collider:getEnterCollisionData("PowerUp").collider
     end
 end
 

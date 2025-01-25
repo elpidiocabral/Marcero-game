@@ -2,12 +2,16 @@ local Gameplay = {}
 
 local wf = require("src.entities.colision")
 local world
-local ground, line, teto, platform, platform, block
+local ground, line, teto, block
+
+local contact = require("src.utils.contact")
 
 local Player = require("src.entities.player")
 local player
 local Enemy = require("src.entities.enemy")
 local enemy
+local Platform = require("src.entities.platform")
+local platform
 local PowerUp = require("src.entities.powerUp")
 local powerUps = {}
 local Block = require("src.entities.block")
@@ -28,6 +32,11 @@ function Gameplay.load()
     enemy = Enemy:new(600, love.graphics.getHeight() - 64)
     enemy.collider = world:addEnemy(600, love.graphics.getHeight() - 64, 32, 32)
     
+    -- Platform
+    platform = Platform:new(100, love.graphics.getHeight() - 120)
+    platform.collider = world:addPlatform(100, love.graphics.getHeight() - 120, 120, 16) -- 120 - 64base = 56
+    --platform.collider = world:addPlatform(200, love.graphics.getHeight() - 210, 120, 16)
+
     -- Block
     block = Block:new(300, love.graphics.getHeight() - 300)
     block.collider = world:addBlock(300, love.graphics.getHeight() - 120, 16, 16)
@@ -36,6 +45,10 @@ function Gameplay.load()
         block.powerUp.collider = world:addPowerUp(block.powerUp.x, block.powerUp.y, block.powerUp.width / 2)
         table.insert(powerUps, block.powerUp)
     end
+
+    contact.handleColision(enemy, enemy.contact_behavior())
+    contact.handleColision(block, block.contact_behavior())
+    contact.handleColision(platform, platform:contact_behavior())
 
     -- Calcular quantos tiles cabem na tela
     tileImage = love.graphics.newImage("src/assets/tile.png")
@@ -56,13 +69,12 @@ function Gameplay.load()
     line = world:addWall(0, 0, 1, 600)
     line = world:addWall(800, 0, 1, 600)
     teto = world:addWall(0, 0, 800, 1)
-    platform = world:addPlatform(100, love.graphics.getHeight() - 120, 120, 16) -- 120 - 64base = 56
-    platform = world:addPlatform(200, love.graphics.getHeight() - 210, 120, 16)
 end
 
 function Gameplay:update(dt)
     player:update(dt)
     enemy:update(dt)
+    --platform:update(dt)
     block:update(dt)
     world:update(dt)
 end
@@ -79,6 +91,7 @@ function Gameplay.draw()
 
     -- Draw Entities
     block:draw()
+    --platform:draw()
     
     for _, powerUp in ipairs(powerUps) do
         powerUp:draw()
