@@ -52,6 +52,7 @@ local function handleColision(collider1, collider2, contact, player)
         end
     end
 end
+-- End
 
 function Player:activateGhostMode(duration)
     self.is_ghost = true
@@ -106,7 +107,6 @@ function Player:update(dt)
     if self.collider:enter("PowerUp") then
         self:activateGhostMode(15)
         local powerUp = self.collider:getEnterCollisionData("PowerUp").collider
-        powerUp:destroy()
     end
 end
 

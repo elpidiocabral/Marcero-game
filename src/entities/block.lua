@@ -24,12 +24,18 @@ end
 
 function Block:update(dt)
     if not self.collider then return end
+    self.powerUp:update(dt)
 
     -- Verificar se é tempo dt de mover o powerUp
     if self.movePowerUp and self.powerUp and self.powerUp.collider then
         local block_x, block_y = self.collider:getPosition()
         self.powerUp.collider:setPosition(block_x, block_y - self.height)
         self.movePowerUp = false -- Resetar a flag
+    end
+
+    if ( self.powerUp.collider ~= nil ) and ( self.powerUp.collider:enter("Player") ) then
+        self.powerUp:destroy()
+        self.powerUp.collider = nil
     end
 
     self.collider:setPreSolve(
@@ -43,7 +49,6 @@ function Block:update(dt)
 
                 if (player_y + player_height / 2) >= (block_y + block_height / 2)  then
                     -- Mover power-up para cima do bloco
-                    collider2:applyLinearImpulse(500, 0)
                     self.movePowerUp = true
                     self.status = false
                 end
