@@ -21,18 +21,15 @@ function Enemy:new(x, y)
     return enemy
 end
 
-function Enemy:contact_behavior()
-    return function(contact_data)
+function Enemy.contact_behavior(contact_data)
         if contact_data.collider2.collision_class == "Player" then
-        
             if (contact_data.collider2_right > contact_data.collider1_left or contact_data.collider1_left < contact_data.collider1_right) 
                 and (contact_data.collider2_bottom > contact_data.collider1_top) then
                 contact_data.collider2:applyLinearImpulse(-300, -150)
             elseif (contact_data.collider2_bottom <= contact_data.collider1_top) then
                 contact_data.collider2:applyLinearImpulse(0, -200)
                 contact_data.collider1:destroy()
-                contact_data.entitie.collider = nil
-            end
+            contact_data.entity.collider = nil
         end
     end
 end

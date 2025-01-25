@@ -46,9 +46,9 @@ function Gameplay.load()
         table.insert(powerUps, block.powerUp)
     end
 
-    contact.handleColision(enemy, enemy.contact_behavior())
-    contact.handleColision(block, block.contact_behavior())
-    contact.handleColision(platform, platform:contact_behavior())
+    contact.handleColision(enemy, enemy.contact_behavior)
+    contact.handleColision(block, block.contact_behavior)
+    contact.handleColision(platform, platform.contact_behavior)
 
     -- Calcular quantos tiles cabem na tela
     tileImage = love.graphics.newImage("src/assets/tile.png")
