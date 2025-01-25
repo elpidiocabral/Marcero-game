@@ -20,13 +20,14 @@ function Player:new(x, y)
     player.is_on_ground = false
 
     -- PowerUps
+    -- Modo Cachaça Fantasma
     player.is_ghost = false
     player.ghost_timer = 0
 
     return player
 end
 
--- Local Functions
+-- Functions
 local function handleColision(collider1, collider2, contact, player)
     -- Platform Colision
     if collider2.collision_class == "Platform" then
@@ -53,8 +54,28 @@ local function handleColision(collider1, collider2, contact, player)
 end
 -- End
 
+function Player:activateGhostMode(duration)
+    self.is_ghost = true
+    self.ghost_timer = duration
+    self.collider:setCollisionClass("GhostPlayer")
+end
+
+function Player:deactivateGhostMode()
+    self.is_ghost = false
+    self.collider:setCollisionClass("Player")
+end
+-- End
+
 function Player:update(dt)
-    -- Atualizar o estado: verificar contato com o chão
+    -- Atualizar o estado de "fantasma"
+    if self.is_ghost then
+        self.ghost_timer = self.ghost_timer - dt
+        if self.ghost_timer <= 0 then
+            self:deactivateGhostMode()
+        end
+    end
+
+    -- Verificar se está no chão
     if self.collider:enter("Ground") or self.collider:enter("Platform") or self.collider:enter("Block")  then
         self.is_on_ground = true
     elseif self.collider:exit("Ground") or self.collider:enter("Plataform") or self.collider:enter("Block") then
@@ -82,12 +103,20 @@ function Player:update(dt)
         handleColision(collider1, collider2, contact, self)
     end)
 
-    -- Encontrão com um inimigo
+    -- Colisão com PowerUp
+    if self.collider:enter("PowerUp") then
+        self:activateGhostMode(15)
+        local powerUp = self.collider:getEnterCollisionData("PowerUp").collider
+    end
 end
 
 function Player:draw()
-    -- Desenhar jogador como um quadrado
-    love.graphics.setColor(1, 1, 1)
+    -- Desenhar jogador
+    if self.is_ghost then
+        love.graphics.setColor(0.5, 0.5, 1)
+    else
+        love.graphics.setColor(1, 1, 1)
+    end
     local x, y = self.collider:getPosition()
     love.graphics.rectangle("fill", x - self.width / 2, y - self.height / 2, self.width, self.height)
 end

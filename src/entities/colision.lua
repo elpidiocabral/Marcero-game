@@ -14,6 +14,7 @@ function Colision:new(gravity)
     setmetatable(colision, Colision)
 
     world = wf.newWorld(0, gravity, true)
+
     world:addCollisionClass("Player")
     world:addCollisionClass("Enemy")
     world:addCollisionClass("Ground")
@@ -21,6 +22,9 @@ function Colision:new(gravity)
     world:addCollisionClass("Platform")
     world:addCollisionClass("Block")
     world:addCollisionClass("PowerUp")
+
+    -- Player modes
+    world:addCollisionClass("GhostPlayer", { ignores = { "Enemy" } })
 
     return colision
 end
