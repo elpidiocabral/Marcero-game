@@ -19,6 +19,7 @@ function Colision:new(gravity)
     world:addCollisionClass("Ground")
     world:addCollisionClass("Wall")
     world:addCollisionClass("Platform")
+    world:addCollisionClass("Block")
     world:addCollisionClass("PowerUp")
 
     return colision
@@ -34,7 +35,7 @@ function Colision:addPlayer(x_position, y_position, width, height)
     colider:setObject({ width = width, height = height })
     colider:setFixedRotation(true)
     colider:setRestitution(0)
-    colider:setFriction(1)
+    colider:setFriction(0) -- Impede "grudes" nas paredes
 
     return colider
 end
@@ -48,6 +49,7 @@ function Colision:addEnemy(x_position, y_position, width, height)
     local colider = world:newRectangleCollider(x_position, y_position, width, height, { collision_class = "Enemy" })
     colider:setFixedRotation(true)
     colider:setRestitution(0)
+    colider:setFriction(0) -- Impede "grudes"
 
     return colider
 end
@@ -64,15 +66,24 @@ function Colision:addWall(x_position, y_position, width, height)
 end
 
 function Colision:addPlatform(x_position, y_position, width, height)
-    local colider = world:newRectangleCollider(x_position, y_position, width, height, { collision_class = "Platform", body_type = "static" })    
+    local colider = world:newRectangleCollider(x_position, y_position, width, height, { collision_class = "Platform", body_type = "static" })
     colider:setObject({ width = width, height = height })
-    colider:setFriction(1)
+    colider:setFriction(0)
 
     return colider
 end
 
+function Colision:addBlock(x_position, y_position, width, height)
+    local colider = world:newRectangleCollider(x_position, y_position, width, height, { collision_class = "Block", body_type = "static" })
+    colider:setObject({ width = width, height = height })
+    colider:setFriction(0)
+
+    return colider
+    
+end
+
 function Colision:addPowerUp(x_position, y_position, radius)
-    local colider = world:newCircleCollider(x_position, y_position, radius, { collision_class = "PowerUp" })
+    local colider = world:newCircleCollider(x_position, y_position, radius, { collision_class = "PowerUp", body_type = "static" })
     colider:setRestitution(1)
 
     return colider
