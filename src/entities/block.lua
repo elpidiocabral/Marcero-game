@@ -22,13 +22,11 @@ function Block:new(x, y)
     return block
 end
 
-function Block:contact_behavior()
-    return function(contact_data)
+function Block.contact_behavior(contact_data)
         if contact_data.collider2_top >= contact_data.collider1_bottom then
             -- Mover power-up para cima do bloco
-            contact_data.entitie.movePowerUp = true
-            contact_data.entitie.status = false
-        end
+        contact_data.entity.movePowerUp = true
+        contact_data.entity.status = false
     end
 end
 

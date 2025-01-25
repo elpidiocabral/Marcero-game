@@ -23,14 +23,12 @@ function Platform:load()
     self.height = platform_obj.height
 end
 
-function Platform:contact_behavior()
-    return function(contact_data)
+function Platform.contact_behavior(contact_data)
         for _, role in ipairs(player_roles) do
             if contact_data.collider2.collision_class == role then
                 if (contact_data.collider2_y + contact_data.collider2_height / 2) > (contact_data.collider1_y + contact_data.collider1_height / 2) then
                     if contact_data.collider2_x >= contact_data.collider1_left and contact_data.collider2_x <= contact_data.collider1_right then
                         contact_data.contact:setEnabled(false)
-                    end
                 end
             end
         end
