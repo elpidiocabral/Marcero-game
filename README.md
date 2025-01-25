@@ -1,7 +1,7 @@
 # Marcero Game 
 
-<img src="{https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua&logoColor=white}" />
-<img src="{https://img.shields.io/badge/L%C3%96VE-0.10.1-EA316E.svg}" />
+![Lua](https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua&logoColor=white)
+![LOVE2D](https://img.shields.io/badge/L%C3%96VE-0.10.1-EA316E.svg)
 
 Marcero Game é um projeto em Lua, usando framework LOVE2D.
 
