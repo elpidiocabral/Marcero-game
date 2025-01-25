@@ -22,6 +22,16 @@ function Block:new(x, y)
     return block
 end
 
+function Block:contact_behavior()
+    return function(contact_data)
+        if contact_data.collider2_top >= contact_data.collider1_bottom then
+            -- Mover power-up para cima do bloco
+            contact_data.entitie.movePowerUp = true
+            contact_data.entitie.status = false
+        end
+    end
+end
+
 function Block:update(dt)
     if not self.collider then return end
     self.powerUp:update(dt)
@@ -37,24 +47,6 @@ function Block:update(dt)
         self.powerUp:destroy()
         self.powerUp.collider = nil
     end
-
-    self.collider:setPreSolve(
-        function(collider1, collider2, contact)
-            if collider2.collision_class == "Player" and self.status then
-                local block_x, block_y = collider1:getPosition()
-                local block_width, block_height = self.width, self.height
-                local player_x, player_y = collider2:getPosition()
-                local player = collider2:getObject()
-                local player_width, player_height = player.width, player.height
-
-                if (player_y + player_height / 2) >= (block_y + block_height / 2)  then
-                    -- Mover power-up para cima do bloco
-                    self.movePowerUp = true
-                    self.status = false
-                end
-            end
-        end
-    )
 end
 
 function Block:draw()
