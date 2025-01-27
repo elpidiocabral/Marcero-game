@@ -27,6 +27,9 @@ function Contact.handleColision(entitie, collision_function)
         local collider1_top = collider1_y - collider1_height / 2
         local collider1_bottom = collider1_y + collider1_height / 2
 
+        local collider1_x_velocity, collider1_y_velocity = collider1:getLinearVelocity()
+        local collider2_x_velocity, collider2_y_velocity = collider2:getLinearVelocity()
+
         contact_data = {
             entitie = entitie,
             collider1 = collider1,
@@ -48,7 +51,11 @@ function Contact.handleColision(entitie, collision_function)
             collider2_top = collider2_top,
             collider2_bottom = collider2_bottom,
             collider1_top = collider1_top,
-            collider1_bottom = collider1_bottom
+            collider1_bottom = collider1_bottom,
+            collider1_x_velocity = collider1_x_velocity,
+            collider1_y_velocity = collider1_y_velocity,
+            collider2_x_velocity = collider2_x_velocity,
+            collider2_y_velocity = collider2_y_velocity
         }
 
         collision_function(contact_data)
