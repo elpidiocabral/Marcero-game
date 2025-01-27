@@ -46,6 +46,7 @@ function Gameplay.load()
         table.insert(powerUps, block.powerUp)
     end
 
+    contact.handleColision(player, player.contact_behavior)
     contact.handleColision(enemy, enemy.contact_behavior)
     contact.handleColision(block, block.contact_behavior)
     contact.handleColision(platform, platform.contact_behavior)

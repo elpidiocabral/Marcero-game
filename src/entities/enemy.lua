@@ -29,7 +29,7 @@ function Enemy.contact_behavior(contact_data)
             elseif (contact_data.collider2_bottom <= contact_data.collider1_top) then
                 contact_data.collider2:applyLinearImpulse(0, -200)
                 contact_data.collider1:destroy()
-            contact_data.entity.collider = nil
+                contact_data.entitie.collider = nil
         end
     end
 end
