@@ -20,7 +20,7 @@ function Player:new(x, y)
     player.is_on_ground = false
 
     -- PowerUps
-    -- Modo Cachaça Fantasma
+     -- Modo Cachaça Fantasma
     player.is_ghost = false
     player.ghost_timer = 0
 
@@ -85,28 +85,6 @@ function Player:update(dt)
     elseif self.collider:exit("Ground") or self.collider:enter("Plataform") or self.collider:enter("Block") then
         self.is_on_ground = false
     end
-
-    -- Verificar se o player está indo para a plataforma
-    --[[ 
-    if self.collider:enter("Platform") then
-        local collision_data = { self.collider:getEnterCollisionData("Platform") }
-        if collision_data[1] and collision_data[2] then
-            local platform_y = collision_data[2]:getY()
-            local player_width, platform_height = collision_data[2]:getSize()
-            local _, player_y = self.collider:getPosition()
-
-            if (player_y + self.height) <= (platform_y - platform_height) then
-                self.collider:applyLinearImpulse(500, 0)
-                self.is_on_ground = true
-            else
-                self.collider:applyLinearImpulse(-500, 0)
-                self.is_on_ground = false
-            end
-        end
-    elseif self.collider:exit("Platform") then
-        self.is_on_ground = false
-    end
-    ]]
 
     -- Movimento horizontal
     local x_velocity, y_velocity = self.collider:getLinearVelocity()
