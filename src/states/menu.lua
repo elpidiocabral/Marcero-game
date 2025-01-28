@@ -47,9 +47,9 @@ function Menu.keypressed(key)
         end 
     elseif input.confirm_press() or input.jump_press() then
         if options[selectOption] == "Iniciar" then
-            changeState(require("src.states.gameplay"))
+            Change_state(require("src.states.gameplay"))
         elseif options[selectOption] == "Configurações" then
-            changeState(require("src.states.settings"))
+            Change_state(require("src.states.settings"))
         elseif options[selectOption] == "Sair" then
             love.event.quit()
         end

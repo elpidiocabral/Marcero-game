@@ -53,10 +53,6 @@ function Block:draw()
         local x, y = self.collider:getPosition()
         love.graphics.rectangle("fill", x - self.width / 2, y - self.height / 2, self.width, self.height)
     end
-
-    if self.powerUp then
-        self.powerUp:draw()
-    end
 end
 
 return Block
