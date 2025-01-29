@@ -90,17 +90,19 @@ function Gameplay:update(dt)
         Change_state(require("src.states.game_over"))
     end
 
-    -- Camera logics
+    -- Camera: Logica de Posicionamento
     cam:lookAt(player.x, player.y)
 
     local w, h = love.graphics.getWidth(), love.graphics.getHeight()
-    if cam.x < w / 2 then
-        cam.x = w / 2
-    elseif cam.y < h / 2 then
-        cam.y = h / 2
-    elseif cam.y < 0 then
-        cam.y = h - h / 2
-    end
+    local ground_level = love.graphics.getHeight()  -- Define onde o chão está
+
+    -- Impedir que a câmera vá para fora da área jogável
+    local min_x, min_y = w / 2, h / 2
+    local max_y = ground_level - h / 2  -- Impede que a câmera vá abaixo do chão
+
+    if cam.x < min_x then cam.x = min_x end
+    if cam.y < min_y then cam.y = min_y end
+    if cam.y > max_y then cam.y = max_y end
 end
 
 function Gameplay.draw()
