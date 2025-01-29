@@ -65,7 +65,7 @@ end
 
 function Colision:addWall(x_position, y_position, width, height)
     local colider = world:newRectangleCollider(x_position, y_position, width, height, { collision_class = "Wall", body_type = "static" })
-    colider:setFriction(1)
+    colider:setFriction(0)
 
     return colider
 end
