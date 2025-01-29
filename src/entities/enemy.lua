@@ -22,14 +22,14 @@ function Enemy:new(x, y)
 end
 
 function Enemy.contact_behavior(contact_data)
-        if contact_data.collider2.collision_class == "Player" then
-            if (contact_data.collider2_right > contact_data.collider1_left or contact_data.collider1_left < contact_data.collider1_right) 
-                and (contact_data.collider2_bottom > contact_data.collider1_top) then
-                contact_data.collider2:applyLinearImpulse(-300, -150)
-            elseif (contact_data.collider2_bottom <= contact_data.collider1_top) then
-                contact_data.collider2:applyLinearImpulse(0, -200)
-                contact_data.collider1:destroy()
-            contact_data.entity.collider = nil
+    if contact_data.collider2.collision_class == "Player" then
+        if (contact_data.collider2_right > contact_data.collider1_left or
+        contact_data.collider2_left < contact_data.collider1_right) and
+        (contact_data.collider2_bottom > contact_data.collider1_top) then
+            -- Esse if de colisão lateral para player - enemy
+        elseif (contact_data.collider2_bottom <= contact_data.collider1_top) then
+            contact_data.collider1:destroy()
+            contact_data.entitie.collider = nil
         end
     end
 end

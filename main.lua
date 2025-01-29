@@ -3,36 +3,36 @@ local Settings = require("src.states.settings")
 local Gameplay = require("src.states.gameplay")
 
 -- Gerenciador de estados do jogo
-local currentState = nil
+local current_state = nil
 
 -- Função global para alterar o estado do jogo
-function changeState(newState)
-    currentState = newState
-    if currentState and currentState.load then
-        currentState:load()
+function Change_state(newState)
+    current_state = newState
+    if current_state and current_state.load then
+        current_state:load()
     end
 end
 
 function love.load()
     -- Inicializa o jogo no menu
-    changeState(Menu)
+    Change_state(Menu)
 end
 
 function love.update(dt)
-    if currentState and currentState.update then
-        currentState:update(dt)
+    if current_state and current_state.update then
+        current_state:update(dt)
     end
 end
 
 function love.draw()
     love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
-    if currentState and currentState.draw then
-        currentState:draw()
+    if current_state and current_state.draw then
+        current_state:draw()
     end
 end
 
 function love.keypressed(key)
-    if currentState and currentState.keypressed then
-        currentState.keypressed(key)
+    if current_state and current_state.keypressed then
+        current_state.keypressed(key)
     end
 end

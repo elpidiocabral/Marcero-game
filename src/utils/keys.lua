@@ -18,7 +18,7 @@ local game_keys = {
     -- Inventory
     inventory = "i",
     -- Menu
-    menu = "escape",
+    escape = "escape",
 
     -- Debug
     debug = "f1",

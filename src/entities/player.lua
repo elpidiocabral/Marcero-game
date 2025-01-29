@@ -10,6 +10,7 @@ function Player:new(x, y)
     -- palyer x, y
     player.width = 32
     player.height = 32
+    player.is_alive = true
 
     -- Criar colisor injetado
     player.collider = nil
@@ -20,7 +21,7 @@ function Player:new(x, y)
     player.is_on_ground = false
 
     -- PowerUps
-    -- Modo Cachaça Fantasma
+     -- Modo Cachaça Fantasma
     player.is_ghost = false
     player.ghost_timer = 0
 
@@ -28,8 +29,44 @@ function Player:new(x, y)
 end
 
 -- Functions
+function Player.contact_behavior(contact_data)
+    -- Platforms
+    if contact_data.collider2.collision_class == "Platform" then
+        if (contact_data.collider1_bottom <= contact_data.collider2_top) and
+           (contact_data.collider1_left < contact_data.collider2_right) and
+           (contact_data.collider1_right > contact_data.collider2_left) and
+           (contact_data.collider1_y_velocity >= 0) then
+            contact_data.entitie.is_on_ground = true
+        else
+            contact_data.entitie.is_on_ground = false
+        end
+    end
 
--- End
+    -- Blocks
+    if contact_data.collider2.collision_class == "Block" then
+        if (contact_data.collider1_bottom <= contact_data.collider2_top) and
+           (contact_data.collider1_left < contact_data.collider2_right) and
+           (contact_data.collider1_right > contact_data.collider2_left) and
+           (contact_data.collider1_y_velocity >= 0) then
+            contact_data.entitie.is_on_ground = true
+        else
+            contact_data.entitie.is_on_ground = false
+        end
+    end
+
+    -- Enemy (Morte do Player)
+    if contact_data.collider2.collision_class == "Enemy" then
+        if (contact_data.collider1_right > contact_data.collider2_left or
+        contact_data.collider1_left < contact_data.collider2_right) and
+        (contact_data.collider1_bottom > contact_data.collider2_top) then
+            contact_data.collider1:applyLinearImpulse(0, -100)
+            contact_data.entitie.is_alive = false -- Morte do Player
+        elseif (contact_data.collider2_bottom <= contact_data.collider1_top) then
+            -- If de colisão por pulo
+            contact_data.collider1:applyLinearImpulse(0, -200)
+        end
+    end
+end
 
 function Player:activateGhostMode(duration)
     self.is_ghost = true
@@ -44,6 +81,14 @@ end
 -- End
 
 function Player:update(dt)
+    -- Verificar se o Player morreu
+    if not self.collider then return end 
+    if not self.is_alive then
+        self.collider:destroy()
+        self.collider = nil
+        return
+    end
+
     -- Atualizar o estado de "fantasma"
     if self.is_ghost then
         self.ghost_timer = self.ghost_timer - dt
@@ -54,25 +99,11 @@ function Player:update(dt)
 
     -- Verificar se está no chão
     if self.collider:enter("Ground") or self.collider:enter("Block") or self.collider:enter("Platform") then
-        self.is_on_ground = true
-    elseif self.collider:exit("Ground") or self.collider:enter("Plataform") or self.collider:enter("Block") then
-        self.is_on_ground = false
-    end
-
-    -- Verificar se o player está indo para a plataforma
-    if self.collider:enter("Platform") then
-        local collision_data = { self.collider:getEnterCollisionData("Platform") }
-        if collision_data[1] and collision_data[2] then
-            local platform_y = collision_data[2]:getY()
-            local _, player_y = self.collider:getPosition()
-
-            if player_y < platform_y then
-                self.is_on_ground = true
-            else
-                self.is_on_ground = false
-            end
+        local x_velocity, y_velocity = self.collider:getLinearVelocity()
+        if y_velocity >= 0 then
+            self.is_on_ground = true
         end
-    elseif self.collider:exit("Platform") then
+    elseif self.collider:exit("Ground") or self.collider:enter("Plataform") or self.collider:enter("Block") then
         self.is_on_ground = false
     end
 

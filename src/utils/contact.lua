@@ -1,10 +1,10 @@
 local Contact = {}
 local contact_data = {}
 
-function Contact.handleColision(entity, collision_function)
-    entity.collider:setPreSolve(function(collider1, collider2, contact)
+function Contact.handleColision(entitie, collision_function)
+    entitie.collider:setPreSolve(function(collider1, collider2, contact)
         local collider1_x, collider1_y = collider1:getPosition()
-        local collider1_width, collider1_height = entity.width, entity.height
+        local collider1_width, collider1_height = entitie.width, entitie.height
 
         local collider2_obj = collider2:getObject()
         local collider2_x, collider2_y, collider2_width, collider2_height
@@ -27,8 +27,11 @@ function Contact.handleColision(entity, collision_function)
         local collider1_top = collider1_y - collider1_height / 2
         local collider1_bottom = collider1_y + collider1_height / 2
 
+        local collider1_x_velocity, collider1_y_velocity = collider1:getLinearVelocity()
+        local collider2_x_velocity, collider2_y_velocity = collider2:getLinearVelocity()
+
         contact_data = {
-            entity = entity,
+            entitie = entitie,
             collider1 = collider1,
             collider2 = collider2,
             contact = contact,
@@ -48,7 +51,11 @@ function Contact.handleColision(entity, collision_function)
             collider2_top = collider2_top,
             collider2_bottom = collider2_bottom,
             collider1_top = collider1_top,
-            collider1_bottom = collider1_bottom
+            collider1_bottom = collider1_bottom,
+            collider1_x_velocity = collider1_x_velocity,
+            collider1_y_velocity = collider1_y_velocity,
+            collider2_x_velocity = collider2_x_velocity,
+            collider2_y_velocity = collider2_y_velocity
         }
 
         collision_function(contact_data)
