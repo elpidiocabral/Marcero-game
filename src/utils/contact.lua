@@ -1,7 +1,7 @@
 local Contact = {}
 local contact_data = {}
 
-function Contact.handleColision(entitie, collision_function)
+function Contact.handleColision(entitie, collision_functions)
     entitie.collider:setPreSolve(function(collider1, collider2, contact)
         local collider1_x, collider1_y = collider1:getPosition()
         local collider1_width, collider1_height = entitie.width, entitie.height
@@ -58,7 +58,9 @@ function Contact.handleColision(entitie, collision_function)
             collider2_y_velocity = collider2_y_velocity
         }
 
-        collision_function(contact_data)
+        for _, collider_function in ipairs(collision_functions) do
+            collider_function(contact_data)
+        end
     end)
 end
 

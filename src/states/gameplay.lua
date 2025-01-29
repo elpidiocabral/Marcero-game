@@ -10,6 +10,7 @@ local cam
 local ground, line, teto, block
 
 local contact = require("src.utils.contact")
+local interections = require("src.context.interections")
 
 local Player = require("src.entities.player")
 local player
@@ -30,7 +31,7 @@ function Gameplay.load()
     world = wf:new(800)
     -- Camera
     cam = camera()
-    cam:zoomTo(1.3)
+    cam:zoomTo(1.2)
 
     -- Player
     player = Player:new(0, love.graphics.getHeight() - 64)
@@ -54,10 +55,10 @@ function Gameplay.load()
         table.insert(powerUps, block.powerUp)
     end
 
-    contact.handleColision(player, player.contact_behavior)
-    contact.handleColision(enemy, enemy.contact_behavior)
-    contact.handleColision(block, block.contact_behavior)
-    contact.handleColision(platform, platform.contact_behavior)
+    contact.handleColision(player, {interections.player_enemy_behavior, interections.player_platform_behavior, interections.player_block_behavior, interections.player_powerUp_behavior})
+    contact.handleColision(enemy, {interections.enemy_player_behavior})
+    contact.handleColision(platform, {interections.platform_player_behavior})
+    contact.handleColision(block, {interections.block_player_behavior})
 
     -- Calcular quantos tiles cabem na tela
     tileImage = love.graphics.newImage("src/assets/tile.png")
