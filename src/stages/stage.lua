@@ -19,8 +19,8 @@ local Player = require("src.entities.player")
 function Stage.load()
     world = wf:new(800)
     
-    cam = camera()
-    cam:zoomTo(1.5)
+    cam = camera(0, 0, 1.5)
+    --cam:zoomTo(1.5)
 
     map = sti("src/assets/maps/house.lua")
 
@@ -38,30 +38,27 @@ function Stage:update(dt)
     world:update(dt)
     player:update(dt)
 
+    -- Camera Logics
     local px, py = player.collider:getPosition()
-
-    local mapWidth = map.width * map.tilewidth
-    local mapHeight = map.height * map.tileheight
-    local min_x, min_y = love.graphics.getWidth() / 2, love.graphics.getHeight() / 2
-    local max_x, max_y = mapWidth - min_x, mapHeight - min_y
-
-    --cam:lookAt(player.x, player.y)
+    cam:lookAt(px, py)
 end
 
 function Stage.draw()
-    --cam:attach()
-        local offsetX, offsetY = 0, map.height * map.tileheight
-        local mapWidth = map.width * map.tilewidth
-        local mapHeight = map.height * map.tileheight
-        local camX, camY = cam:position()
+    cam:attach()
+        -- Obtém as coordenadas reais da câmera no mundo
+        local tx, ty = cam:worldCoords(0, 0)
 
-        map:draw(0, love.graphics.getHeight() / 2 - 26)
-        
+        -- Corrige o offset para centralizar o mapa corretamente em qualquer zoom
+        local offsetX = (love.graphics.getWidth() / 2) * (1 - 1 / cam.scale) - (map.width * map.tilewidth) / 2 + 108
+        local offsetY = (love.graphics.getHeight() / 2) * (1 - 1 / cam.scale) + (map.tileheight * map.height) / 2 + 40
+
+        -- Renderiza o mapa na posição correta levando em conta a escala
+        map:draw(-tx + offsetX, -ty + offsetY, cam.scale, cam.scale)
+
         world:draw()
         player:draw()
-    --cam:detach()
+    cam:detach()
 end
-
 
 function Stage.keypressed()
     
