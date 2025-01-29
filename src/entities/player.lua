@@ -10,6 +10,7 @@ function Player:new(x, y)
     -- palyer x, y
     player.width = 32
     player.height = 32
+    player.is_alive = true
 
     -- Criar colisor injetado
     player.collider = nil
@@ -52,8 +53,20 @@ function Player.contact_behavior(contact_data)
             contact_data.entitie.is_on_ground = false
         end
     end
+
+    -- Enemy (Morte do Player)
+    if contact_data.collider2.collision_class == "Enemy" then
+        if (contact_data.collider1_right > contact_data.collider2_left or
+        contact_data.collider1_left < contact_data.collider2_right) and
+        (contact_data.collider1_bottom > contact_data.collider2_top) then
+            contact_data.collider1:applyLinearImpulse(0, -100)
+            contact_data.entitie.is_alive = false -- Morte do Player
+        elseif (contact_data.collider2_bottom <= contact_data.collider1_top) then
+            -- If de colisão por pulo
+            contact_data.collider1:applyLinearImpulse(0, -200)
+        end
+    end
 end
--- End
 
 function Player:activateGhostMode(duration)
     self.is_ghost = true
@@ -68,6 +81,14 @@ end
 -- End
 
 function Player:update(dt)
+    -- Verificar se o Player morreu
+    if not self.collider then return end 
+    if not self.is_alive then
+        self.collider:destroy()
+        self.collider = nil
+        return
+    end
+
     -- Atualizar o estado de "fantasma"
     if self.is_ghost then
         self.ghost_timer = self.ghost_timer - dt

@@ -1,6 +1,7 @@
 local Gameplay = {}
 
 local wf = require("src.entities.colision")
+local input = require("src.utils.input")
 local world
 local ground, line, teto, block
 
@@ -78,6 +79,10 @@ function Gameplay:update(dt)
     --platform:update(dt)
     block:update(dt)
     world:update(dt)
+
+    if not player.is_alive then
+        Change_state(require("src.states.game_over"))
+    end
 end
 
 function Gameplay.draw()
@@ -106,6 +111,10 @@ end
 
 function Gameplay.keypressed(key)
     Player.keypressed(key)
+
+    if input.escape_press() then
+        Change_state(require("src.states.menu"))
+    end
 end
 
 function Gameplay.keyreleased(key)
