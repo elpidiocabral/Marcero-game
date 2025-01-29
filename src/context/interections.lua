@@ -7,8 +7,8 @@ function Interections.player_enemy_behavior(contact_data)
     if contact_data.collider2.collision_class == "Enemy" then
         if (contact_data.collider1_right > contact_data.collider2_left or contact_data.collider1_left < contact_data.collider2_right) and (contact_data.collider1_bottom > contact_data.collider2_top) then
             contact_data.entitie.is_alive = false -- Morte do Player
-        elseif (contact_data.collider2_bottom <= contact_data.collider1_top) then
-            contact_data.collider1:applyLinearImpulse(0, contact_data.entitie.jump_force * contact_data.entitie.mass)
+        elseif (contact_data.collider1_bottom - 1 <= contact_data.collider2_top) then
+            contact_data.entitie.collider:applyLinearImpulse(0, contact_data.entitie.kick_jump_force * contact_data.entitie.mass)
         end
     end
 end
@@ -40,7 +40,7 @@ end
 -- Enemy Context
 function Interections.enemy_player_behavior(contact_data)
     if contact_data.collider2.collision_class == "Player" then
-        if (contact_data.collider2_bottom <= contact_data.collider1_top) then
+        if (contact_data.collider2_bottom - 2 <= contact_data.collider1_top) then
             contact_data.collider1:setCollisionClass("DeadEnemy")
             contact_data.entitie.collider:setLinearVelocity(0, 0)
             contact_data.entitie.speed = 0

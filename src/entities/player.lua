@@ -20,6 +20,7 @@ function Player:new(x, y)
     -- Parâmetros de movimento
     player.speed = 200
     player.jump_force = -400
+    player.kick_jump_force = -200
     player.mass = 0
     player.is_on_ground = false
 
