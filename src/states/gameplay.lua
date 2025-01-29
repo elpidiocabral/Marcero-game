@@ -3,6 +3,10 @@ local Gameplay = {}
 local wf = require("src.entities.colision")
 local input = require("src.utils.input")
 local world
+
+local camera = require("libs.camera")
+local cam
+
 local ground, line, teto, block
 
 local contact = require("src.utils.contact")
@@ -24,9 +28,12 @@ local tilesWide, tilesHigh
 function Gameplay.load()
     -- Windfield
     world = wf:new(800)
+    -- Camera
+    cam = camera()
+    cam:zoomTo(1.3)
 
     -- Player
-    player = Player:new()
+    player = Player:new(0, love.graphics.getHeight() - 64)
     player.collider = world:addPlayer(0, love.graphics.getHeight() - 64, 32, 32)
 
     -- Enemy
@@ -76,13 +83,16 @@ end
 function Gameplay:update(dt)
     player:update(dt)
     enemy:update(dt)
-    --platform:update(dt)
+    platform:update(dt)
     block:update(dt)
     world:update(dt)
 
     if not player.is_alive then
         Change_state(require("src.states.game_over"))
     end
+
+    -- Camera: Logica de Posicionamento
+    cam:lookAt(player.x, player.y - 64)
 end
 
 function Gameplay.draw()
@@ -91,22 +101,24 @@ function Gameplay.draw()
 
     for x = 0, tilesWide - 1 do
         for y = 0, tilesHigh - 1 do
-            love.graphics.draw(tileImage, x * tileWidth, love.graphics.getHeight() - tileHeight * (y + 1))
+            -- love.graphics.draw(tileImage, x * tileWidth, love.graphics.getHeight() - tileHeight * (y + 1))
         end
     end
 
-    -- Draw Entities
-    block:draw()
-    --platform:draw()
-    
-    for _, powerUp in ipairs(powerUps) do
-        powerUp:draw()
-    end
+    cam:attach()
+        -- Draw Entities
+        block:draw()
+        --platform:draw()
+        
+        for _, powerUp in ipairs(powerUps) do
+            powerUp:draw()
+        end
 
-    enemy:draw()
-    player:draw()
+        enemy:draw()
+        player:draw()
 
-    world:draw()
+        world:draw()
+    cam:detach()
 end
 
 function Gameplay.keypressed(key)

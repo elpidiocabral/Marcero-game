@@ -26,10 +26,6 @@ function Menu.draw()
         end
         love.graphics.printf(options, 0, 200 + (i * 40), 800, "center")
     end 
-
-    -- teste press
-    love.graphics.setColor(1, 1, 1)
-    love.graphics.print(selectOption, 15, 15)
 end
 
 function Menu.keypressed(key)

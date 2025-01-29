@@ -8,6 +8,8 @@ function Player:new(x, y)
     setmetatable(player, Player)
 
     -- palyer x, y
+    player.x = x or 0
+    player.y = y or love.graphics.getHeight() - 64
     player.width = 32
     player.height = 32
     player.is_alive = true
@@ -17,7 +19,8 @@ function Player:new(x, y)
     
     -- Parâmetros de movimento
     player.speed = 200
-    player.jump_force = -800
+    player.jump_force = -400
+    player.mass = 0
     player.is_on_ground = false
 
     -- PowerUps
@@ -59,11 +62,10 @@ function Player.contact_behavior(contact_data)
         if (contact_data.collider1_right > contact_data.collider2_left or
         contact_data.collider1_left < contact_data.collider2_right) and
         (contact_data.collider1_bottom > contact_data.collider2_top) then
-            contact_data.collider1:applyLinearImpulse(0, -100)
             contact_data.entitie.is_alive = false -- Morte do Player
         elseif (contact_data.collider2_bottom <= contact_data.collider1_top) then
             -- If de colisão por pulo
-            contact_data.collider1:applyLinearImpulse(0, -200)
+            contact_data.collider1:applyLinearImpulse(0, contact_data.entitie.jump_force * contact_data.entitie.mass)
         end
     end
 end
@@ -82,12 +84,16 @@ end
 
 function Player:update(dt)
     -- Verificar se o Player morreu
-    if not self.collider then return end 
+    if not self.collider then return end
     if not self.is_alive then
         self.collider:destroy()
         self.collider = nil
         return
     end
+
+    -- Atualizar as variáveis de Player
+    self.x, self.y = self.collider:getPosition()
+    self.mass = self.collider:getMass()
 
     -- Atualizar o estado de "fantasma"
     if self.is_ghost then
@@ -119,7 +125,7 @@ function Player:update(dt)
 
     -- Pulo
     if input.jump_press() and self.is_on_ground then
-        self.collider:applyLinearImpulse(0, self.jump_force)
+        self.collider:applyLinearImpulse(0, self.jump_force * self.mass)
         self.is_on_ground = false -- Evitar múltiplos pulos
     end
     
@@ -137,7 +143,7 @@ function Player:draw()
         love.graphics.setColor(1, 1, 1)
     end
     local x, y = self.collider:getPosition()
-    love.graphics.rectangle("fill", x - self.width / 2, y - self.height / 2, self.width, self.height)
+    love.graphics.rectangle("fill", x - self.width / 2, y - self.height / 2, self.width, self.height, nil, nil, nil, self.width / 2, self.height / 2)
 end
 
 function Player.keypressed(key)

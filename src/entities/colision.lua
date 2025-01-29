@@ -22,9 +22,10 @@ function Colision:new(gravity)
     world:addCollisionClass("Platform")
     world:addCollisionClass("Block")
     world:addCollisionClass("PowerUp")
-
+    
     -- Player modes
     world:addCollisionClass("GhostPlayer", { ignores = { "Enemy" } })
+    world:addCollisionClass("DeadEnemy", { ignores = { "Player" } })
 
     return colision
 end
@@ -88,7 +89,7 @@ end
 
 function Colision:addPowerUp(x_position, y_position, radius)
     local colider = world:newCircleCollider(x_position, y_position, radius, { collision_class = "PowerUp", body_type = "static" })
-    colider:setRestitution(1)
+    colider:setFriction(0)
 
     return colider
 end

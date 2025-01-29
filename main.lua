@@ -1,3 +1,10 @@
+--[[
+    Variável global estética, 
+    sua função é remover os sublinhados de erro do vscode
+    por não reconhecer o ambiente global love
+]] 
+love = love
+
 local Menu = require("src.states.menu")
 local Settings = require("src.states.settings")
 local Gameplay = require("src.states.gameplay")
