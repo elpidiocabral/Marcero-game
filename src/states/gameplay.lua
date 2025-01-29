@@ -32,7 +32,7 @@ function Gameplay.load()
     cam = camera()
 
     -- Player
-    player = Player:new()
+    player = Player:new(0, love.graphics.getHeight() - 64)
     player.collider = world:addPlayer(0, love.graphics.getHeight() - 64, 32, 32)
 
     -- Enemy
@@ -88,6 +88,18 @@ function Gameplay:update(dt)
 
     if not player.is_alive then
         Change_state(require("src.states.game_over"))
+    end
+
+    -- Camera logics
+    cam:lookAt(player.x, player.y)
+
+    local w, h = love.graphics.getWidth(), love.graphics.getHeight()
+    if cam.x < w / 2 then
+        cam.x = w / 2
+    elseif cam.y < h / 2 then
+        cam.y = h / 2
+    elseif cam.y < 0 then
+        cam.y = h - h / 2
     end
 end
 

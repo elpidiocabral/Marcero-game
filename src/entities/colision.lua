@@ -22,9 +22,10 @@ function Colision:new(gravity)
     world:addCollisionClass("Platform")
     world:addCollisionClass("Block")
     world:addCollisionClass("PowerUp")
-
+    
     -- Player modes
     world:addCollisionClass("GhostPlayer", { ignores = { "Enemy" } })
+    world:addCollisionClass("DeadEnemy", { ignores = { "Player" } })
 
     return colision
 end
