@@ -2,6 +2,10 @@ local Gameplay = {}
 
 local wf = require("src.entities.colision")
 local world
+
+local camera = require("libs.camera")
+local cam
+
 local ground, line, teto, block
 
 local contact = require("src.utils.contact")
@@ -23,6 +27,8 @@ local tilesWide, tilesHigh
 function Gameplay.load()
     -- Windfield
     world = wf:new(800)
+    -- Camera
+    cam = camera()
 
     -- Player
     player = Player:new()
@@ -89,18 +95,20 @@ function Gameplay.draw()
         end
     end
 
-    -- Draw Entities
-    block:draw()
-    --platform:draw()
-    
-    for _, powerUp in ipairs(powerUps) do
-        powerUp:draw()
-    end
+    cam:attach()
+        -- Draw Entities
+        block:draw()
+        --platform:draw()
+        
+        for _, powerUp in ipairs(powerUps) do
+            powerUp:draw()
+        end
 
-    enemy:draw()
-    player:draw()
+        enemy:draw()
+        player:draw()
 
-    world:draw()
+        world:draw()
+    cam:detach()
 end
 
 function Gameplay.keypressed(key)
