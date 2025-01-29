@@ -32,44 +32,6 @@ function Player:new(x, y)
 end
 
 -- Functions
-function Player.contact_behavior(contact_data)
-    -- Platforms
-    if contact_data.collider2.collision_class == "Platform" then
-        if (contact_data.collider1_bottom <= contact_data.collider2_top) and
-           (contact_data.collider1_left < contact_data.collider2_right) and
-           (contact_data.collider1_right > contact_data.collider2_left) and
-           (contact_data.collider1_y_velocity >= 0) then
-            contact_data.entitie.is_on_ground = true
-        else
-            contact_data.entitie.is_on_ground = false
-        end
-    end
-
-    -- Blocks
-    if contact_data.collider2.collision_class == "Block" then
-        if (contact_data.collider1_bottom <= contact_data.collider2_top) and
-           (contact_data.collider1_left < contact_data.collider2_right) and
-           (contact_data.collider1_right > contact_data.collider2_left) and
-           (contact_data.collider1_y_velocity >= 0) then
-            contact_data.entitie.is_on_ground = true
-        else
-            contact_data.entitie.is_on_ground = false
-        end
-    end
-
-    -- Enemy (Morte do Player)
-    if contact_data.collider2.collision_class == "Enemy" then
-        if (contact_data.collider1_right > contact_data.collider2_left or
-        contact_data.collider1_left < contact_data.collider2_right) and
-        (contact_data.collider1_bottom > contact_data.collider2_top) then
-            contact_data.entitie.is_alive = false -- Morte do Player
-        elseif (contact_data.collider2_bottom <= contact_data.collider1_top) then
-            -- If de colisão por pulo
-            contact_data.collider1:applyLinearImpulse(0, contact_data.entitie.jump_force * contact_data.entitie.mass)
-        end
-    end
-end
-
 function Player:activateGhostMode(duration)
     self.is_ghost = true
     self.ghost_timer = duration

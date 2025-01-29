@@ -24,28 +24,15 @@ function Enemy:new(x, y, width, height)
     return enemy
 end
 
-function Enemy.contact_behavior(contact_data)
-    if contact_data.collider2.collision_class == "Player" then
-        if (contact_data.collider2_right > contact_data.collider1_left or
-        contact_data.collider2_left < contact_data.collider1_right) and
-        (contact_data.collider2_bottom > contact_data.collider1_top) then
-            -- Esse if de colisão lateral para player - enemy
-        elseif (contact_data.collider2_bottom <= contact_data.collider1_top) then
-            contact_data.collider1:setCollisionClass("DeadEnemy")
-            contact_data.entitie.collider:setLinearVelocity(0, 0)
-            contact_data.entitie.is_alive = false
-            contact_data.entitie.speed = 0
-            contact_data.entitie.death_timer = 0.3
-            --contact_data.collider1:destroy()
-            --contact_data.entitie.collider = nil
-        end
-    end
-end
-
 function Enemy:update(dt)
     if not self.collider then return end -- Impede atualizações post mortem
 
-    -- Verificar se o inimigo morreu
+    -- Comportamento
+    self:is_dead(dt)
+    self:movement()
+end
+
+function Enemy:is_dead(dt)
     if not self.is_alive then
         self.death_timer = self.death_timer - dt
         if self.death_timer <= 0 then
@@ -54,8 +41,16 @@ function Enemy:update(dt)
         end
         return
     end
+end
 
-    -- Movement
+function Enemy:destroy()
+    if self.collider then
+        self.collider:destroy()
+        self.collider = nil
+    end
+end
+
+function Enemy:movement()
     if self.is_alive then
         local x_velocity, y_velocity = self.collider:getLinearVelocity()
         local x, y = self.collider:getPosition()
@@ -67,13 +62,6 @@ function Enemy:update(dt)
         end
     
         self.collider:setLinearVelocity(self.speed * self.direction, y_velocity)
-    end
-end
-
-function Enemy:destroy()
-    if self.collider then
-        self.collider:destroy()
-        self.collider = nil
     end
 end
 
