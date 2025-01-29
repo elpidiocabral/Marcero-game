@@ -31,37 +31,41 @@ function Player:new(x, y)
     return player
 end
 
-function Player:update(dt)
-    -- Verificar estados do player
-    self:is_dead()
-    self:verify_ghost_mode(dt)
-
-    -- Atualizar as variáveis de Player
-    self.x, self.y = self.collider:getPosition()
-    self.mass = self.collider:getMass()
-
-    -- Comportamento
-    Player:check_is_on_ground()
-    Player:movement()
-    Player:jump()
-    
-    -- Colisão com PowerUp
-    if self.collider:enter("PowerUp") then
-        self:activate_ghost_mode(15)
-    end
+-- Functions
+function Player:activateGhostMode(duration)
+    self.is_ghost = true
+    self.ghost_timer = duration
+    self.collider:setCollisionClass("GhostPlayer")
 end
 
--- Functions
-function Player:is_dead()
+function Player:deactivateGhostMode()
+    self.is_ghost = false
+    self.collider:setCollisionClass("Player")
+end
+-- End
+
+function Player:update(dt)
+    -- Verificar se o Player morreu
     if not self.collider then return end
     if not self.is_alive then
         self.collider:destroy()
         self.collider = nil
         return
     end
-end
 
-function Player:check_is_on_ground()
+    -- Atualizar as variáveis de Player
+    self.x, self.y = self.collider:getPosition()
+    self.mass = self.collider:getMass()
+
+    -- Atualizar o estado de "fantasma"
+    if self.is_ghost then
+        self.ghost_timer = self.ghost_timer - dt
+        if self.ghost_timer <= 0 then
+            self:deactivateGhostMode()
+        end
+    end
+
+    -- Verificar se está no chão
     if self.collider:enter("Ground") or self.collider:enter("Block") or self.collider:enter("Platform") then
         local x_velocity, y_velocity = self.collider:getLinearVelocity()
         if y_velocity >= 0 then
@@ -70,9 +74,8 @@ function Player:check_is_on_ground()
     elseif self.collider:exit("Ground") or self.collider:enter("Plataform") or self.collider:enter("Block") then
         self.is_on_ground = false
     end
-end
 
-function Player:movement()
+    -- Movimento horizontal
     local x_velocity, y_velocity = self.collider:getLinearVelocity()
     if input.right_pressed() then
         self.collider:setLinearVelocity(self.speed, y_velocity)
@@ -82,35 +85,17 @@ function Player:movement()
         self.collider:setLinearVelocity(0, y_velocity)
     end
 
-end
-
-function Player:jump()
+    -- Pulo
     if input.jump_press() and self.is_on_ground then
         self.collider:applyLinearImpulse(0, self.jump_force * self.mass)
         self.is_on_ground = false -- Evitar múltiplos pulos
     end
-end
-
-function Player:verify_ghost_mode(dt)
-    if self.is_ghost then
-        self.ghost_timer = self.ghost_timer - dt
-        if self.ghost_timer <= 0 then
-            self:deactivate_ghost_mode()
-        end
+    
+    -- Colisão com PowerUp
+    if self.collider:enter("PowerUp") then
+        self:activateGhostMode(15)
     end
 end
-
-function Player:activate_ghost_mode(duration)
-    self.is_ghost = true
-    self.ghost_timer = duration
-    self.collider:setCollisionClass("GhostPlayer")
-end
-
-function Player:deactivate_ghost_mode()
-    self.is_ghost = false
-    self.collider:setCollisionClass("Player")
-end
--- End
 
 function Player:draw()
     -- Desenhar jogador
