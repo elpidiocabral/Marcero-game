@@ -15,8 +15,9 @@ local contact = require("src.utils.contact")
 local interections = require("src.context.interections")
 
 local Player = require("src.entities.player")
+local player
 
-function Stage.load()
+function Stage.load(gameplay_player)
     world = wf:new(800)
     
     cam = camera(0, 0, 1.5)
@@ -25,7 +26,7 @@ function Stage.load()
     map = sti("src/assets/maps/house.lua")
 
     -- Player de teste
-    player = Player:new()
+    player = gameplay_player
     player.collider = world:addPlayer(0, love.graphics.getHeight() - 128, 32, 32)
 
     ground = world:addGround(0, love.graphics.getHeight() - 64, map.width * map.tilewidth, map.tileheight)
@@ -48,7 +49,10 @@ function Stage.draw()
         -- Obtém as coordenadas reais da câmera no mundo
         local tx, ty = cam:worldCoords(0, 0)
 
-        -- Corrige o offset para centralizar o mapa corretamente em qualquer zoom
+        --[[
+            Corrige o offset para centralizar o mapa corretamente em qualquer zoom 
+            Mas só se o mapa estiver configurado corretamente, do contrário tem que adicionar constantes 
+        ]] 
         local offsetX = (love.graphics.getWidth() / 2) * (1 - 1 / cam.scale) - (map.width * map.tilewidth) / 2 + 108
         local offsetY = (love.graphics.getHeight() / 2) * (1 - 1 / cam.scale) + (map.tileheight * map.height) / 2 + 40
 

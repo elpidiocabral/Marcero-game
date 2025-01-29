@@ -46,7 +46,7 @@ function Menu.keypressed(key)
         selectOption = selectOption + 1
         if selectOption > #options then
             selectOption = 1
-        end 
+        end
     elseif input.confirm_press() or input.jump_press() then
         if options[selectOption] == "Iniciar" then
             Change_state(require("src.states.gameplay"))
@@ -59,7 +59,7 @@ function Menu.keypressed(key)
 
     -- debug 
     if input.debug_press() then
-        Change_state(require("src.stages.stage"))
+        Change_state(require("src.levels.stage"))
     end
 end
 

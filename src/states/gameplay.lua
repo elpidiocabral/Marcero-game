@@ -5,6 +5,55 @@ local cam
 
 local input = require("src.utils.input")
 local wf = require("src.entities.colision")
+
+local stage = require("src.levels.stage")
+
+local Player = require("src.entities.player")
+local player
+
+function Gameplay.load()
+    -- Player
+    player = Player:new(0, love.graphics.getHeight() - 64)
+    stage.load(player)
+    --player.collider = world:addPlayer(0, love.graphics.getHeight() - 64, 32, 32)
+end
+
+function Gameplay:update(dt)
+    player:update(dt)
+    stage:update(dt)
+
+    -- Lógica para ir para stages?
+    if not player.is_alive then
+        Change_state(require("src.states.game_over"))
+    end
+end
+
+function Gameplay.draw()
+    stage.draw()
+end
+
+function Gameplay.keypressed(key)
+    Player.keypressed(key)
+
+    if input.escape_press() then
+        Change_state(require("src.states.menu"))
+    end
+end
+
+function Gameplay.keyreleased(key)
+    Player.keyreleased(key)
+end
+
+return Gameplay
+
+--[[ OLD Gameplay
+local Gameplay = {}
+
+local camera = require("libs.camera")
+local cam
+
+local input = require("src.utils.input")
+local wf = require("src.entities.colision")
 local world
 
 local ground, line, teto, block
@@ -135,3 +184,4 @@ function Gameplay.keyreleased(key)
 end
 
 return Gameplay
+]]
