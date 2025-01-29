@@ -1,7 +1,7 @@
 function love.conf(t)
     t.window.title = "Marcero Adventures"         
-    t.window.width = 800
-    t.window.height = 600
+    t.window.width = 640 * 2
+    t.window.height = 360 * 2
     t.window.resizable = false
     t.window.fullscreen = false
     t.window.vsync = 1

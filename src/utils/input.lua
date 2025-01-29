@@ -26,6 +26,7 @@ function Input.right_press() return Input.is_pressed(game_keys.right) or Input.i
 function Input.jump_press() return Input.is_pressed(game_keys.jump) end
 function Input.confirm_press() return Input.is_pressed(game_keys.confirm) end
 function Input.escape_press() return Input.is_pressed(game_keys.escape) end
+function Input.debug_press() return Input.is_pressed(game_keys.debug) end
 
 -- Se a tecla está pressionada
 function Input.up_pressed() return Input.is_down(game_keys.up) or Input.is_down(game_keys.alt_up) end

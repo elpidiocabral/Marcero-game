@@ -15,18 +15,24 @@ end
 function Menu.draw()
     love.graphics.setBackgroundColor(0.1, 0.1, 0.1)
     love.graphics.setColor(1, 1, 1)
-    love.graphics.setFont(love.graphics.newFont(24))
+    love.graphics.setFont(love.graphics.newFont(32))
 
-    -- desenho das opções
-    for i, options in ipairs(options) do 
+    local screenWidth = love.graphics.getWidth()
+    local screenHeight = love.graphics.getHeight()
+
+    -- Definir posição inicial no centro da tela
+    local startY = screenHeight / 2 - (#options * 40) / 2
+
+    for i, option in ipairs(options) do
         if i == selectOption then
-            love.graphics.setColor(1, 0, 0)
-        else 
-            love.graphics.setColor(1, 1, 1)
+            love.graphics.setColor(1, 0, 0) -- Vermelho para seleção
+        else
+            love.graphics.setColor(1, 1, 1) -- Branco para não selecionado
         end
-        love.graphics.printf(options, 0, 200 + (i * 40), 800, "center")
-    end 
+        love.graphics.printf(option, 0, startY + (i * 50), screenWidth, "center")
+    end
 end
+
 
 function Menu.keypressed(key)
     input.keypressed(key)
@@ -49,6 +55,11 @@ function Menu.keypressed(key)
         elseif options[selectOption] == "Sair" then
             love.event.quit()
         end
+    end
+
+    -- debug 
+    if input.debug_press() then
+        Change_state(require("src.stages.stage"))
     end
 end
 

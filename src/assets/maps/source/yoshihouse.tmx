@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="20" height="11" tilewidth="32" tileheight="32" infinite="0" nextlayerid="2" nextobjectid="1">
+ <tileset firstgid="1" name="YoshiHouse" tilewidth="32" tileheight="32" tilecount="104" columns="8">
+  <image source="YoshiHouse.png" width="256" height="432"/>
+ </tileset>
+ <layer id="1" name="Camada de Blocos 1" width="20" height="11">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+57,58,59,60,61,59,60,61,59,60,61,62,63,64,0,0,0,0,0,0,
+65,66,67,68,69,67,68,69,67,68,69,70,71,72,0,0,0,0,0,0,
+73,74,75,76,77,75,76,77,75,76,77,78,79,80,0,0,0,0,0,0,
+81,82,83,84,85,83,84,85,83,84,85,86,87,88,0,0,0,0,0,0,
+89,90,91,92,93,91,92,93,91,92,93,94,95,96,0,0,0,0,0,0,
+97,98,99,100,101,99,100,101,99,100,101,102,103,104,0,0,0,0,0,0
+</data>
+ </layer>
+</map>

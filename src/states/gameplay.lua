@@ -1,12 +1,11 @@
 local Gameplay = {}
 
+local camera = require("libs.camera")
+local cam
+
 local input = require("src.utils.input")
 local wf = require("src.entities.colision")
 local world
-local sti = require("libs.sti")
-
-local camera = require("libs.camera")
-local cam
 
 local ground, line, teto, block
 
