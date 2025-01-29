@@ -30,6 +30,7 @@ function Gameplay.load()
     world = wf:new(800)
     -- Camera
     cam = camera()
+    cam:zoomTo(1.3)
 
     -- Player
     player = Player:new(0, love.graphics.getHeight() - 64)
@@ -82,7 +83,7 @@ end
 function Gameplay:update(dt)
     player:update(dt)
     enemy:update(dt)
-    --platform:update(dt)
+    platform:update(dt)
     block:update(dt)
     world:update(dt)
 
@@ -91,18 +92,7 @@ function Gameplay:update(dt)
     end
 
     -- Camera: Logica de Posicionamento
-    cam:lookAt(player.x, player.y)
-
-    local w, h = love.graphics.getWidth(), love.graphics.getHeight()
-    local ground_level = love.graphics.getHeight()  -- Define onde o chão está
-
-    -- Impedir que a câmera vá para fora da área jogável
-    local min_x, min_y = w / 2, h / 2
-    local max_y = ground_level - h / 2  -- Impede que a câmera vá abaixo do chão
-
-    if cam.x < min_x then cam.x = min_x end
-    if cam.y < min_y then cam.y = min_y end
-    if cam.y > max_y then cam.y = max_y end
+    cam:lookAt(player.x, player.y - 64)
 end
 
 function Gameplay.draw()
@@ -111,7 +101,7 @@ function Gameplay.draw()
 
     for x = 0, tilesWide - 1 do
         for y = 0, tilesHigh - 1 do
-            love.graphics.draw(tileImage, x * tileWidth, love.graphics.getHeight() - tileHeight * (y + 1))
+            -- love.graphics.draw(tileImage, x * tileWidth, love.graphics.getHeight() - tileHeight * (y + 1))
         end
     end
 
