@@ -4,6 +4,7 @@
     por não reconhecer o ambiente global love
 ]] 
 love = love
+love.graphics.setDefaultFilter("nearest", "nearest")
 
 local Menu = require("src.states.menu")
 local Settings = require("src.states.settings")
