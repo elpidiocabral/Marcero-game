@@ -19,8 +19,8 @@ function Player:new(x, y)
     player.collider = nil
     
     -- Parâmetros de movimento
-    player.speed = 200
-    player.jump_force = -400
+    player.speed = 180
+    player.jump_force = -350
     player.kick_jump_force = -200
     player.mass = 0
     player.is_on_ground = false
@@ -37,8 +37,9 @@ function Player:new(x, y)
     )
     player.animations = {}
     player.animations.idle = anim8.newAnimation( player.grid( 1, 2 ), 1 )
-    player.animations.right = anim8.newAnimation( player.grid( '2-4', 2 ), 0.3 )
-    player.animations.left = anim8.newAnimation( player.grid( '2-4', 1 ), 0.3 )
+    player.animations.right = anim8.newAnimation( player.grid( '2-3', 2 ), 0.4 )
+    player.animations.left = anim8.newAnimation( player.grid( '2-3', 1 ), 0.4 )
+    player.animations.jump = anim8.newAnimation( player.grid( 2, 3 ), 1 )
 
     player.current_animation = player.animations.idle
 
@@ -104,6 +105,7 @@ function Player:update(dt)
 
     -- Pulo
     if input.jump_press() and self.is_on_ground then
+        self.current_animation = self.animations.jump
         self.collider:applyLinearImpulse(0, self.jump_force * self.mass)
         self.is_on_ground = false -- Evitar múltiplos pulos
     end
