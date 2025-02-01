@@ -10,7 +10,7 @@ function Player:new(x, y)
     -- palyer x, y
     player.x = x or 0
     player.y = y or love.graphics.getHeight() - 64
-    player.width = 32
+    player.width = 16
     player.height = 32
     player.is_alive = true
 
