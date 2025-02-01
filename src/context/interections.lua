@@ -15,13 +15,19 @@ end
 
 function Interections.player_platform_behavior(contact_data)
     if contact_data.collider2.collision_class == "Platform" then
-        if (contact_data.collider1_bottom <= contact_data.collider2_top) and (contact_data.collider1_left < contact_data.collider2_right) and (contact_data.collider1_right > contact_data.collider2_left) and (contact_data.collider1_y_velocity >= 0) then
+        local tolerance = 1
+
+        if (contact_data.collider1_bottom >= contact_data.collider2_top - tolerance)
+        and (contact_data.collider1_left < contact_data.collider2_right)
+        and (contact_data.collider1_right > contact_data.collider2_left)
+        and (contact_data.collider1_y_velocity >= 0) then
             contact_data.entitie.is_on_ground = true
         else
             contact_data.entitie.is_on_ground = false
         end
     end
 end
+
 
 function Interections.player_block_behavior(contact_data)
     if contact_data.collider2.collision_class == "Block" then
