@@ -42,7 +42,6 @@ function Player:new(x, y)
     player.animations.jump = anim8.newAnimation( player.grid( 1, 3 ), 1 )
     player.animations.jump_down = anim8.newAnimation( player.grid( 2, 3 ), 1 )
 
-
     player.current_animation = player.animations.idle
 
     return player

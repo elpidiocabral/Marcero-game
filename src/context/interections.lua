@@ -43,6 +43,17 @@ function Interections.player_powerUp_behavior(contact_data)
     -- 
 end
 
+function Interections.player_highground_behavior(contact_data)
+    if contact_data.collider2.collision_class == "HighGround" then
+        contact_data.contact:setEnabled(false)
+
+        if contact_data.collider1_bottom < contact_data.collider2_top then
+            contact_data.contact:setEnabled(true)
+            contact_data.entitie.is_on_ground = true
+        end
+    end
+end
+
 -- Enemy Context
 function Interections.enemy_player_behavior(contact_data)
     if contact_data.collider2.collision_class == "Player" then

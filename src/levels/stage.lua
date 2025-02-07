@@ -10,6 +10,7 @@ local world
 local input = require("src.utils.input")
 
 local ground, celling, leftWall, rightWall
+local highgrounds = {}
 
 local contact = require("src.utils.contact")
 local interections = require("src.context.interections")
@@ -35,7 +36,7 @@ function Stage.load(gameplay_player)
     ground = world:addGround(627, love.graphics.getHeight(), map.width * map.tilewidth, map.tileheight)
     leftWall = world:addWall(0, 0, 1, love.graphics.getHeight())
     rightWall = world:addWall(map.width * map.tilewidth, 0, 1, love.graphics.getHeight())
-    
+
     -- Criar múltiplas plataformas
     local platform_positions = {
         {97, love.graphics.getHeight() - 49, 126, 4},
@@ -45,15 +46,19 @@ function Stage.load(gameplay_player)
     }
 
     for _, pos in ipairs(platform_positions) do
-        local platform = Platform:new()
-        platform.collider = world:addPlatform(pos[1], pos[2], pos[3], pos[4])
-        table.insert(platforms, platform)
-
-        contact.handleColision(platform, {interections.platform_player_behavior})
+        local platform
+        platform = world:addHighGround(pos[1], pos[2], pos[3], pos[4])
+        table.insert(highgrounds, platform)
     end
 
     -- HandleColision
-    contact.handleColision(player, {interections.player_enemy_behavior, interections.player_platform_behavior, interections.player_block_behavior, interections.player_powerUp_behavior})
+    contact.handleColision(player, {
+        interections.player_enemy_behavior,
+        interections.player_platform_behavior,
+        interections.player_block_behavior,
+        interections.player_powerUp_behavior,
+        interections.player_highground_behavior
+    })
 end
 
 function Stage:update(dt)

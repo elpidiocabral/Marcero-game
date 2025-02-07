@@ -18,6 +18,7 @@ function Colision:new(gravity)
     world:addCollisionClass("Player")
     world:addCollisionClass("Enemy")
     world:addCollisionClass("Ground")
+    world:addCollisionClass("HighGround") -- plataformas de terra alta
     world:addCollisionClass("Wall")
     world:addCollisionClass("Platform")
     world:addCollisionClass("Block")
@@ -61,6 +62,10 @@ end
 
 function Colision:addGround(x_position, y_position, width, height)
     return world:newRectangleCollider(x_position, y_position, width, height, { collision_class = "Ground", body_type = "static" })
+end
+
+function Colision:addHighGround(x_position, y_position, width, height)
+    return world:newRectangleCollider(x_position, y_position, width, height, { collision_class = "HighGround", body_type = "static" })
 end
 
 function Colision:addWall(x_position, y_position, width, height)
